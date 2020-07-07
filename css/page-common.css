@@ -70,30 +70,30 @@ input#for-automata-clear {
 }
 .header .button.sidebar-toggler {
     float: left;
-    margin: 0 10px 0 0;
     color: #fff;
     text-align: left;
     white-space: nowrap;
-    border: 1px solid #68777b;
+    background-color: transparent;
 }
 .header .button.sidebar-toggler img {
-    width: 1.4em;
+    width: 28px;
+    height: 28px;
 }
-.header .button.sidebar-toggler:hover {
-    background-color: #566a72;
-    border: 1px solid #75868b;
-}
-.header .button.sidebar-toggler span {
-    font-size: 1em;
-    margin-left: .3em;
-    padding-left: .2em;
-    padding-right: .2em;
+.header .button.sidebar-toggler #totalPeople {
+    float: right;
+    margin-left: 5px;
+    padding-left: .4em;
+    padding-right: .4em;
     text-align: center;
-    min-width: 20px;
-}
-.header .button.sidebar-toggler span#totalPeople {
+    min-width: 28px;
+    font-size: 1em;
     font-weight: bold;
+    background-color: #516169;
+    border-radius: 6px;
     display: none;
+}
+.header .button.sidebar-toggler:hover #totalPeople {
+    background-color: #566a72;
 }
 .header .button.leave {
     background-color: #e85757;
@@ -300,14 +300,17 @@ input#for-automata-clear {
     color: #fff;
     margin-top: -.1em;
     margin-bottom: 1.5em;
-    padding-left: 1.7em;
     padding-right: .8em;
     font-size: 1.4em;
     text-shadow: rgba(0, 0, 0, .498039) 0 1px 2px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    background: url("/assets/images/textchat.svg") top left / 1.3em no-repeat;
+}
+.reveal.popup h2 img {
+    width: 1.55em;
+    vertical-align: bottom;
+    margin-right: .17em;
 }
 .reveal.popup h2 .iconfont {
     color: #e9f4f6;

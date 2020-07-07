@@ -338,7 +338,7 @@ function ChatClientCore(chatClientSettings) {
         contact.appendTo($("#contacts"));
         if (chater.country) {
             let flag = $("<img class='flag'/>");
-            flag.attr("src", "https://raw.githubusercontent.com/topframe/country-flags/master/svg/" + chater.country.toLowerCase() + ".svg");
+            flag.attr("src", chatClientSettings.cdnAssetsUrl + "/flags/" + chater.country.toLowerCase() + ".svg");
             flag.attr("title", chater.country);
             contact.append(flag);
         }

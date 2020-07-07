@@ -2,7 +2,7 @@ let tokenIssuanceTimer;
 let tokenIssuanceCanceled;
 
 $(function () {
-    if (!chatClient.isAvailable()) {
+    if (!chatClient || !chatClient.isAvailable()) {
         return;
     }
     $(".language-settings .button.ok").on("click", function () {
