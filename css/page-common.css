@@ -1,0 +1,386 @@
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+body {
+    background: #7b878c;
+}
+body:before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    content: "";
+    box-shadow: 0 0 150px 200px rgb(49, 64, 70), 0 0 0 0 rgb(255, 255, 255);
+}
+.grid-y.grid-frame {
+    /*noinspection CssUnresolvedCustomProperty*/
+    height: calc(var(--vh, 1vh) * 100);
+}
+.grid-y.grid-frame > .cell {
+    max-width: 1260px;
+    margin: 0 auto;
+}
+.grid-y.grid-frame > .shadow.cell {
+    background-color: #fff;
+    box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.full-height {
+    height: 100%;
+}
+input#for-automata-clear {
+    width: 0;
+    height: 0;
+    padding: 0;
+    margin: 0;
+    border: none;
+}
+.header .grid-x {
+    height: 50px;
+}
+.header {
+    position: relative;
+    background-color: #314046;
+    color: #fff;
+    padding: 0 10px;
+}
+.header h1, .header h2 {
+    font-size: 1.2em;
+    line-height: 30px;
+    margin: 0;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+    white-space: nowrap !important;
+}
+.header h2 {
+    font-size: 1.2em;
+}
+.header .button {
+    margin: 0;
+    padding: 0 6px;
+    border-radius: 6px;
+    line-height: 28px;
+    height: 30px;
+}
+.header .button .iconfont {
+    font-size: 24px;
+    vertical-align: sub;
+}
+.header .button.sidebar-toggler {
+    float: left;
+    margin: 0 10px 0 0;
+    color: #fff;
+    text-align: left;
+    white-space: nowrap;
+    padding-left: 1.6em;
+    border: 1px solid #68777b;
+    background: #516169 url("/assets/images/textchat.svg") 5px / 1.3em no-repeat;
+}
+.header .button.sidebar-toggler:hover {
+    background-color: #566a72;
+    border: 1px solid #75868b;
+}
+.header .button.sidebar-toggler span {
+    font-size: 1em;
+    margin-left: .3em;
+    padding-left: .2em;
+    padding-right: .2em;
+    text-align: center;
+    min-width: 20px;
+}
+.header .button.sidebar-toggler span#totalPeople {
+    font-weight: bold;
+    display: none;
+}
+.header .button.leave {
+    background-color: #e85757;
+}
+.header .button.leave:hover {
+    background-color: #e02323;
+}
+.header .button.leave:disabled {
+    background-color: #e02323;
+    cursor: wait;
+}
+.header .button.signin {
+    background-color: #2D844D;
+}
+.header .button.signin .iconfont {
+    color: #fff;
+}
+.header .button.signout {
+    background-color: #C45A4F;
+}
+.header .button.signout:disabled {
+    cursor: wait;
+}
+.footer {
+    padding: 0;
+}
+.body {
+    background-color: #fff;
+    border-radius: 10px 10px 0 0;
+}
+.sidebar {
+    position: relative;
+    padding: 0;
+    background-color: #d1f3ff;
+    overflow: auto;
+}
+.body .sidebar {
+    border-radius: 10px 0 0 0;
+}
+@media screen and (max-width: 39.9375em) {
+    .body .sidebar {
+        border-radius: 10px 10px 0 0;
+    }
+}
+.rounded-top-corners {
+    border-radius: 0 10px 0 0;
+}
+@media screen and (max-width: 39.9375em) {
+    .rounded-top-corners {
+        border-radius: 10px 10px 0 0;
+    }
+}
+.footer .sidebar {
+    overflow: hidden;
+    padding: 0;
+}
+.user {
+    position: relative;
+}
+.user .shrink {
+    position: relative;
+}
+.user .auto {
+    position: relative;
+}
+.user .avatar {
+    background-color: #a8e0fd;
+    width: 70px;
+    height: 60px;
+    margin: 4px;
+    border-radius: 8px;
+}
+.user .avatar .iconfont {
+    position: absolute;
+    top: -5px;
+    left: 15px;
+    font-size: 50px;
+    color: #d1f3ff;
+    text-shadow: rgba(0, 0, 0, .498039) 0 1px 2px;
+}
+.user .nameplate {
+    position: relative;
+    background-color: #a8e0fd;
+    margin: 4px 4px 4px 0;
+    height: 60px;
+    border-radius: 8px 8px 6px 8px;
+}
+.user .nameplate .flag {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 40px;
+    border-radius: 6px 0 6px 0;
+}
+.user .nameplate .username {
+    margin: 0;
+    padding: 8px 8px 2px;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+    white-space: nowrap !important;
+    color: #186286;
+    font-size: 1em;
+}
+.user .nameplate .description {
+    margin: 0;
+    padding: 0 45px 0 8px;
+    font-size: .85em;
+    color: #455a65;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+    white-space: nowrap !important;
+}
+.user.my-col-1 .avatar .iconfont {
+    color: #fcbdbd;
+}
+.user.my-col-2 .avatar .iconfont {
+    color: #fcd3b2;
+}
+.user.my-col-3 .avatar .iconfont {
+    color: #f6ea9e;
+}
+.user.my-col-4 .avatar .iconfont {
+    color: #b4ecb1;
+}
+.user.my-col-5 .avatar .iconfont {
+    color: #b5defc;
+}
+.user.my-col-6 .avatar .iconfont {
+    color: #c5c5fa;
+}
+.user.my-col-7 .avatar .iconfont {
+    color: #f3c1f2;
+}
+#form-sign-in label.title {
+    color: #454545;
+    margin: 0 0 .2em 0;
+    font-size: 1em;
+}
+#form-sign-in textarea {
+    font-size: .9em;
+    line-height: 1.1;
+}
+#form-sign-in .form-error {
+    font-size: 1em;
+}
+#common-sign-in .my-col-box {
+    display: inline-block;
+    padding: .1em .6em;
+    margin-bottom: .3em;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 2px solid #fff;
+}
+#common-sign-in .my-col-box.selected {
+    border-width: 4px;
+    font-weight: bold;
+}
+#common-sign-in .my-col-box.my-col-1 {
+    background-color: #fcbdbd;
+    border-color: #fc9999;
+}
+#common-sign-in .my-col-box.my-col-2 {
+    background-color: #fdd8b6;
+    border-color: #fcbf74;
+}
+#common-sign-in .my-col-box.my-col-3 {
+    background-color: #f6ea9e;
+    border-color: #fbdc24;
+}
+#common-sign-in .my-col-box.my-col-4 {
+    background-color: #b4ecb1;
+    border-color: #6ef56a;
+}
+#common-sign-in .my-col-box.my-col-5 {
+    background-color: #b5defc;
+    border-color: #6cb8fa;
+}
+#common-sign-in .my-col-box.my-col-6 {
+    background-color: #c5c5fa;
+    border-color: #8484f5;
+}
+#common-sign-in .my-col-box.my-col-7 {
+    background-color: #f3c1f2;
+    border-color: #f890f5;
+}
+.reveal.popup {
+    background-color: #e9f4f6;
+}
+.reveal.popup:before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    content: "";
+    box-shadow: 0 0 1.4em 3.6em #486571, 0 0 0 0 #e9f4f6;
+    z-index: -1;
+}
+.reveal.popup.error:before {
+    box-shadow: 0 0 1.4em 3.6em #486571, 0 0 0 0 #e9f4f6;
+}
+.reveal.popup h2 {
+    color: #fff;
+    margin-top: -.1em;
+    margin-bottom: 1.5em;
+    padding-left: 1.7em;
+    padding-right: .8em;
+    font-size: 1.4em;
+    text-shadow: rgba(0, 0, 0, .498039) 0 1px 2px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    background: url("/assets/images/textchat.svg") top left / 1.3em no-repeat;
+}
+.reveal.popup h2 .iconfont {
+    color: #e9f4f6;
+}
+.reveal.popup .content p .button {
+    margin: 0;
+    padding: .4em .8em;
+}
+.reveal.popup .close-button {
+    color: #f5fffa;
+}
+.reveal.popup .banner {
+    display: block;
+    font-size: 10em;
+    line-height: 1;
+    text-align: center;
+    width: 1em;
+    margin: 0 auto;
+    color: #3481a0;
+    text-shadow: 5px 5px 1px #ccc;
+}
+.reveal.popup.error .banner {
+    color: #516169;
+}
+.reveal.popup .banner.animate {
+    position: relative;
+    margin: 0 auto;
+    -webkit-animation: shake 4.7s infinite;
+    animation: shake 4.7s infinite;
+}
+.reveal.popup .banner.animate.denial {
+    -webkit-animation: shake-denial 7.7s infinite;
+    animation: shake-denial 7.7s infinite;
+}
+@-webkit-keyframes shake {
+    0%, 10%, 20%, 30%, 40%, 50%, 60%, 70%, 80%, 90%, 100% {
+        top: 10px;
+    }
+    5%, 15%, 25%, 35%, 45%, 55%, 65%, 75%, 85%, 95% {
+        top: -15px;
+    }
+}
+@keyframes shake {
+    0%, 10%, 20%, 30%, 40%, 50%, 60%, 70%, 80%, 90%, 100% {
+        top: 10px;
+    }
+    5%, 15%, 25%, 35%, 45%, 55%, 65%, 75%, 85%, 95% {
+        top: -15px;
+    }
+}
+@-webkit-keyframes shake-denial {
+    0%, 10%, 20%, 30%, 40%, 50%, 60%, 70%, 80%, 90%, 100% {
+        left: 50px;
+    }
+    5%, 15%, 25%, 35%, 45%, 55%, 65%, 75%, 85%, 95% {
+        left: -50px;
+    }
+}
+@keyframes shake-denial {
+    0%, 10%, 20%, 30%, 40%, 50%, 60%, 70%, 80%, 90%, 100% {
+        left: 50px;
+    }
+    5%, 15%, 25%, 35%, 45%, 55%, 65%, 75%, 85%, 95% {
+        left: -50px;
+    }
+}
+@-webkit-keyframes spin {
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+@keyframes spin {
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}

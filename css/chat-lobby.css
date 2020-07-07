@@ -1,0 +1,94 @@
+.convo-container {
+    position: relative;
+}
+.convo-container .grid-container.full-height {
+    overflow: auto;
+}
+#convo {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 101;
+    height: auto;
+    padding: 0;
+    overflow: hidden;
+}
+#convo .message {
+    margin: 0;
+}
+#convo .message .content {
+    float: none;
+    margin: 0;
+    border-radius: 0;
+    background-color: #f6e6ad !important;
+    border: 0;
+    border-top: 1px solid #eec938;
+    overflow: auto;
+}
+@media screen and (max-width: 39.9375em) {
+    #convo .message .content {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
+#convo .message .content code {
+    padding: .12em .5em;
+    font-weight: normal;
+    color: #333;
+    background-color: #fff;
+    border: 1px solid #eec938;
+    border-radius: 5px;
+    vertical-align: top;
+}
+#convo .message .content code.sender {
+    margin-right: .5em;
+}
+#convo .message.my-col-1 .content code.sender {
+    background-color: #fbd2d2;
+}
+#convo .message.my-col-2 .content code.sender {
+    background-color: #ffe0c5;
+}
+#convo .message.my-col-3 .content code.sender {
+    background-color: #f4ebac;
+}
+#convo .message.my-col-4 .content code.sender {
+    background-color: #c0eabe;
+}
+#convo .message.my-col-5 .content code.sender {
+    background-color: #c6e6fd;
+}
+#convo .message.my-col-6 .content code.sender {
+    background-color: #d9d9fb;
+}
+#convo .message.my-col-7 .content code.sender {
+    background-color: #f4cff3;
+}
+#convo .message:nth-last-child(1) {
+    border-bottom: 1px solid #eec938;
+}
+#convo .message:nth-last-child(2) {
+    opacity: .93;
+}
+#convo .message:nth-last-child(3) {
+    opacity: .87;
+}
+#convo .message:nth-last-child(4) {
+    opacity: .69;
+}
+#convo .message:nth-last-child(5) {
+    opacity: .5;
+}
+#convo .message:nth-last-child(6) {
+    opacity: .5;
+}
+#convo .message:nth-last-child(7) {
+    opacity: .5;
+}
+#convo .message:nth-last-child(8) {
+    opacity: .5;
+}
+#convo .message:nth-last-child(9) {
+    opacity: .5;
+}

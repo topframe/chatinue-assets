@@ -1,0 +1,266 @@
+#contacts {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+#contacts .contact {
+    position: relative;
+    margin: 4px;
+    padding: .3em .6em .3em 2.2em;
+    font-size: .95em;
+    color: #186286;
+    background-color: #99d9fc;
+    border-radius: 8px 8px 5px 8px;
+}
+#contacts .contact:hover {
+    background-color: #8dd5fa;
+    cursor: pointer;
+}
+#contacts .contact .status {
+    position: absolute;
+    left: .3em;
+    top: .35em;
+    width: 2em;
+    padding: .2em .64em;
+    border-radius: 50%;
+    font-size: .8em;
+    background-color: #fff;
+}
+#contacts .contact .status .iconfont {
+    color: #fff;
+}
+#contacts .contact .status.my-col-1 {
+    background-color: #fc9999;
+}
+#contacts .contact .status.my-col-2 {
+    background-color: #fcbf74;
+}
+#contacts .contact .status.my-col-3 {
+    background-color: #f8e154;
+}
+#contacts .contact .status.my-col-4 {
+    background-color: #6ef56a;
+}
+#contacts .contact .status.my-col-5 {
+    background-color: #6cb8fa;
+}
+#contacts .contact .status.my-col-6 {
+    background-color: #8484f5;
+}
+#contacts .contact .status.my-col-7 {
+    background-color: #f890f5;
+}
+#contacts .contact .name {
+    margin: 0;
+    padding: 0 20px 0 0;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+    white-space: nowrap !important;
+}
+#contacts .contact .description {
+    margin: 0;
+    padding: 0 24px 2px 0;
+    color: #455a65;
+    font-size: .9em;
+    line-height: 1.1;
+    display: none;
+}
+#contacts .contact.has-description::after {
+    content: "";
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    border: 3px solid #4ffd00;
+    border-radius: 3px;
+}
+#contacts .contact .flag {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 30px;
+    max-height: 22px;
+    border-radius: 5px 0 5px 0;
+}
+#convo {
+    height: 100%;
+    overflow-y: auto;
+    padding-top: 15px;
+}
+#convo .message {
+    margin-top: 4px;
+    margin-bottom: 5px;
+    overflow: auto;
+}
+#convo .message .content {
+    border-radius: 1em;
+    padding: .4em .9em;
+    margin: 0 0 2px;
+    line-height: 1.2;
+    font-size: .97em;
+    word-wrap: anywhere;
+}
+#convo .message .content .datetime {
+    font-size: .9em;
+    color: #555;
+    padding-left: .6em;
+}
+#convo .message.event {
+    position: relative;
+    margin-top: 0;
+    margin-bottom: 6px;
+    border-radius: 8px;
+    padding-top: .15em;
+    padding-bottom: .15em;
+    background-color: #f1f1f1;
+}
+#convo .message.event .content {
+    margin: 0;
+    border-radius: 8px;
+    width: 100%;
+    color: #333;
+    text-align: center;
+    font-size: .94em;
+    padding: .35em 1em .35em 1.2em;
+}
+#convo .message.event.group {
+    border-radius: 8px;
+    max-height: 200px;
+    overflow: auto;
+}
+#convo .message.event.group.all-visible .content {
+    display: block !important;
+}
+#convo .message.event.group .content {
+    border-radius: 0;
+}
+#convo .message.event.group .content.omitted {
+    display: none;
+    font-size: .88em;
+    padding: .2em 0 .2em 2em;
+    color: #555;
+}
+#convo .message.event.group .content.omitted:hover {
+    color: #333;
+}
+#convo .message.event .content.user-joined {
+    text-align: left;
+}
+#convo .message.event .self-introduction {
+    text-align: left;
+    margin: 0 1em .4em;
+    padding: .3em .6em;
+    font-size: .9em;
+    line-height: 1.3;
+    background-color: #d7d7d7;
+    border-radius: 8px;
+}
+#convo .message.event .self-introduction.my-col-1 {
+    background-color: #fbd2d2;
+}
+#convo .message.event .self-introduction.my-col-2 {
+    background-color: #ffe0c5;
+}
+#convo .message.event .self-introduction.my-col-3 {
+    background-color: #f6ea9e;
+}
+#convo .message.event .self-introduction.my-col-4 {
+    background-color: #c0eabe;
+}
+#convo .message.event .self-introduction.my-col-5 {
+    background-color: #c6e6fd;
+}
+#convo .message.event .self-introduction.my-col-6 {
+    background-color: #d4d4fc;
+}
+#convo .message.event .self-introduction.my-col-7 {
+    background-color: #f4cff3;
+}
+#convo .message.event .content.user-left {
+    text-align: left;
+}
+#convo .message.event .content .datetime {
+    padding-left: 1em;
+}
+#convo .message.event.group .more {
+    position: absolute;
+    top: .29em;
+    left: 0;
+    line-height: 1;
+    font-size: 1.2em;
+    color: #ff5900;
+    cursor: pointer;
+}
+#convo .message.event .content strong {
+    font-weight: bold;
+}
+#convo .message.received {
+    left: 0;
+}
+#convo .message.received .content {
+    clear: both;
+    float: left;
+    background-color: #72baec8a;
+    border-radius: 0 20px 20px;
+}
+#convo .message.received .username {
+    float: left;
+    font-weight: bold;
+}
+#convo .message.sent .content {
+    clear: both;
+    float: right;
+    background-color: #fbe2ae;
+    border-radius: 20px 0 20px 20px;
+}
+#convo .message.sent .username {
+    float: right;
+    font-weight: bold;
+}
+#convo .message.coupled .username {
+    display: none;
+}
+#convo .message.restored .content {
+    background-color: #ccc !important;
+}
+#convo .message.my-col-1 .content {
+    background-color: #fbd2d2;
+}
+#convo .message.my-col-2 .content {
+    background-color: #ffe0c5;
+}
+#convo .message.my-col-3 .content {
+    background-color: #f6ea9e;
+}
+#convo .message.my-col-4 .content {
+    background-color: #c0eabe;
+}
+#convo .message.my-col-5 .content {
+    background-color: #c6e6fd;
+}
+#convo .message.my-col-6 .content {
+    background-color: #d4d4fc;
+}
+#convo .message.my-col-7 .content {
+    background-color: #f4cff3;
+}
+.message-box .input-group {
+    margin: 0;
+}
+.message-box button.busy, .message-box button.pause {
+    background-color: brown;
+    opacity: .8;
+}
+.message-box button.pause {
+    color: #aaa;
+}
+.message-box button.quiet {
+    margin-left: 5px;
+    padding-left: 7px;
+    padding-right: 7px;
+    border-radius: 5px !important;
+}
+@media screen and (max-width: 39.9375em) {
+    .message-box {
+        background: #f5f5f5;
+    }
+}

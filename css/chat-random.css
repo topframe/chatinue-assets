@@ -1,0 +1,119 @@
+.random #convo .message.event .content {
+    text-align: left;
+    padding: .4em .8em;
+}
+.random #convo .message.custom {
+    position: relative;
+    margin-top: 0;
+    margin-bottom: 6px;
+    border-radius: 8px;
+    background-color: #f1f1f1;
+}
+.random #convo .message.custom .button {
+    border: none;
+    background-color: #1b838d;
+    color: #fff;
+}
+.random #convo .message.custom .iconfont.banner {
+    display: block;
+    font-size: 10em;
+    line-height: 1.2;
+    width: 1em;
+    margin: 0 auto;
+    color: #879495;
+    text-shadow: 5px 5px 1px #ccc;
+}
+.random #convo .message.custom .iconfont.banner.animate {
+    -webkit-transition: width .5s, height .5s, background-color 1s, -webkit-transform 1s;
+    transition: width .5s, height .5s, background-color 1s, transform 1s;
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+}
+.random #convo .message.custom .iconfont.banner.active {
+    color: #1b838d;
+    -webkit-animation: heartbeat 1s infinite alternate;
+    animation: heartbeat 1s infinite alternate;
+}
+@-webkit-keyframes heartbeat {
+    0% { color: #1b838d; }
+    100% { color: transparent; }
+}
+@keyframes heartbeat {
+    0% { color: #1b838d; }
+    100% { color: transparent; }
+}
+.random #convo .message.custom h3 {
+    color: #1b838d;
+}
+.random #convo .message.custom h3.wait {
+    color: #777;
+}
+.random #convo .message.custom .progress-bar {
+    width: 80%;
+    height: 1em;
+    margin: 1em auto;
+    overflow: hidden;
+    background-color: #1b838d;
+    border-radius: 1em;
+    opacity: .45;
+}
+.random #convo .message.custom .cylon_eye {
+    background-color: #02e7fd;
+    background-image: linear-gradient(to right,
+        rgba(27, 131, 141, 1) 0%,
+        rgba(27, 131, 141, .1) 50%,
+        rgba(27, 131, 141, 1) 100%);
+    height: 100%;
+    width: 5em;
+    -webkit-animation: 4s linear 0s infinite alternate move_eye;
+    animation: 4s linear 0s infinite alternate move_eye;
+}
+@-webkit-keyframes move_eye { from { margin-left: -20%; } to { margin-left: 100%; }  }
+@keyframes move_eye { from { margin-left: -20%; } to { margin-left: 100%; }  }
+.random #convo .message.custom .self-introduction {
+    background-color: #fff;
+    border: 1px solid #e1e0e0;
+    border-radius: 8px;
+    font-size: .9em;
+}
+.random #convo .message.custom .self-introduction .self-introduction-title {
+    margin: 0;
+    padding: .2em .8em;
+    background-color: #e3e3e3;
+    border-radius: 7px 7px 0 0;
+}
+.random #convo .message.custom .self-introduction.my-col-1 .self-introduction-title {
+    background-color: #fbd2d2;
+}
+.random #convo .message.custom .self-introduction.my-col-2 .self-introduction-title {
+    background-color: #ffe0c5;
+}
+.random #convo .message.custom .self-introduction.my-col-3 .self-introduction-title {
+    background-color: #f6ea9e;
+}
+.random #convo .message.custom .self-introduction.my-col-4 .self-introduction-title {
+    background-color: #c0eabe;
+}
+.random #convo .message.custom .self-introduction.my-col-5 .self-introduction-title {
+    background-color: #c6e6fd;
+}
+.random #convo .message.custom .self-introduction.my-col-6 .self-introduction-title {
+    background-color: #d4d4fc;
+}
+.random #convo .message.custom .self-introduction.my-col-7 .self-introduction-title {
+    background-color: #f4cff3;
+}
+.random #convo .message.custom .self-introduction .description {
+    margin: 0;
+    padding: .6em .8em;
+}
+.random .message-box button.next {
+    margin-left: 5px;
+    padding-left: 7px;
+    padding-right: 7px;
+    border-radius: 5px !important;
+    background-color: #1b838d;
+}
+.random .users-by-country-container {
+    display: none;
+}

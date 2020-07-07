@@ -1,0 +1,23 @@
+.choose-info {
+    border-radius: 0;
+}
+.language-settings {
+    padding-top: .7em;
+    margin-bottom: .5em;
+    background-color: #e2f7ff;
+    border: 1px solid #d1f3ff;
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+}
+.language-settings .guide {
+    color: #3481a0;
+    font-weight: bold;
+}
+.language-settings select {
+    border: 1px solid #c5deea;
+}
+.language-settings .button.ok {
+    background-color: #3481a0;
+    color: #fff;
+    font-weight: bold;
+}

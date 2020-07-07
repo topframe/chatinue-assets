@@ -1,0 +1,248 @@
+.lobby.user {
+    background-color: #eee;
+    border-radius: 10px;
+}
+.service {
+    position: relative;
+    border-radius: 10px;
+    background-color: #f3f3f3;
+    margin-top: 0;
+}
+.service.cell {
+    margin-top: 0;
+}
+.service a.title {
+    display: block;
+    width: 85%;
+}
+.service a.title h4 {
+    font-weight: bold;
+}
+.service p {
+    margin-bottom: .3em;
+    color: #444;
+}
+.service p.guide {
+    font-size: .9em;
+    padding-left: .7em;
+    border-left: 2px solid #999;
+    border-radius: 8px;
+}
+.service p.dummy {
+    margin-bottom: 1.8em;
+}
+.service a.guide {
+    position: absolute;
+    top: .2em;
+    right: .25em;
+    font-size: 1.5em;
+    line-height: 1;
+    padding: 0;
+}
+.service .service-options {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    text-align: right;
+}
+.service .service-options .convo-lang {
+    width: auto;
+    height: 30px;
+    margin: 0;
+    padding-left: .6em;
+    font-size: .9em;
+    background-color: #dfdfdf;
+    border: none;
+    border-radius: 10px 10px 0 0;
+    vertical-align: bottom;
+}
+.service .service-options .button.start {
+    margin: 0;
+    border-radius: 18px 0 9px 0;
+    border-top: 1px solid #fff;
+    border-left: 1px solid #fff;
+    min-width: 12em;
+    vertical-align: bottom;
+    color: #fff;
+    font-size: .8em;
+    font-weight: bold;
+}
+.service .service-options .button.start.en {
+    min-width: 16em;
+}
+.service.exchange h4 {
+    color: #3e91b3;
+}
+.service.exchange p.guide {
+    border-left: 2px solid #3e91b3;
+}
+.service.exchange a.guide {
+    color: #3e91b3;
+}
+.service.exchange .service-options .button.start {
+    background-color: #3e91b3;
+}
+.service.exchange:hover .service-options .button.start {
+    background-color: #2888af;
+}
+.service.random h4 {
+    color: #e76686;
+}
+.service.random p.guide {
+    border-left: 2px solid #d26881;
+}
+.service.random a.guide {
+    color: #d26881;
+}
+.service.random .service-options .button.start {
+    background-color: #de7b91;
+}
+.service.random:hover .service-options .button.start {
+    background-color: #f16e8d;
+}
+@media screen and (max-width: 18em) {
+    .service.random p.dummy {
+        margin-bottom: 3.6em;
+    }
+}
+.service.strangers h4 {
+    color: #ff9319;
+}
+.service.strangers p.guide {
+    border-left: 2px solid #ffa83c;
+}
+.service.strangers a.guide {
+    color: #ffa83c;
+}
+.service.strangers .service-options .button.start {
+    background-color: #ea9f4b;
+}
+.service.strangers:hover .service-options .button.start {
+    background-color: #f8a03d;
+}
+.service.private h4 {
+    color: #5fb440;
+}
+.service.private p.guide {
+    border-left: 2px solid #84d268;
+}
+.service.private a.guide {
+    color: #84d268;
+}
+.service.private .service-options .button.start {
+    background-color: #7fcc64;
+}
+.service.private:hover .service-options .button.start {
+    background-color: #76d554;
+}
+.service.public h4 {
+    color: #1691cf;
+}
+.service.public p.guide {
+    border-left: 2px solid #58aed9;
+}
+.service.public a.guide {
+    color: #58aed9;
+}
+.service.public .service-options .button.start {
+    background-color: #64bce5;
+}
+.service.public:hover .service-options .button.start {
+    background-color: #44bbf5;
+}
+.rooms-options {
+    font-size: .85em;
+    background-color: #ececec;
+    border-radius: 8px;
+    padding: 0 0 0 1em;
+}
+.rooms-options h6 {
+    margin: .25em 0;
+    line-height: 1.2;
+}
+.rooms-options .refresh-rooms {
+    white-space: nowrap;
+}
+.rooms-options .room-lang {
+    width: auto;
+    height: 34px;
+    margin: 7px 0 0 0;
+    padding-left: .6em;
+    font-size: 1em;
+    background-color: #dfdfdf;
+    border: none;
+    border-left: 1px solid #b2e4f5;
+    border-radius: 18px 8px 8px 0;
+    border-top: 1px solid #fff;
+    border-left: 1px solid #fff;
+}
+.rooms .room {
+    position: relative;
+    border-radius: 10px;
+    border: 1px solid #99ddfc;
+    padding: .5em .7em 1.5em;
+    color: #888;
+}
+.rooms .room.cell {
+    margin-bottom: 0;
+}
+.rooms .room.template {
+    display: none;
+}
+.rooms .room h5 {
+    color: #1691cf;
+    margin-right: 1em;
+    margin-bottom: .5em;
+}
+.rooms .room .room-info {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    padding: .35em .55em;
+    line-height: 1;
+}
+.rooms .room .curr-users {
+    font-size: 1.1em;
+}
+.rooms .room.active .curr-users {
+    color: #0280be;
+}
+.rooms .room.active .curr-users:before {
+    -webkit-animation: in-chatting .8s infinite alternate;
+    animation: in-chatting .8s infinite alternate;
+}
+@-webkit-keyframes in-chatting {
+    0% { color: #0280be; }
+    100% { color: #92d3f3; }
+}
+@keyframes in-chatting {
+    0% { color: #0280be; }
+    100% { color: #92d3f3; }
+}
+.rooms .room .lang {
+    padding-left: 1em;
+    font-size: .9em;
+}
+.rooms .room .new {
+    position: absolute;
+    right: .1em;
+    top: 0;
+    padding: .1em;
+    color: #ff8f18;
+    line-height: 1;
+    font-size: 1.5em;
+}
+.rooms .room .button.start {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    border-radius: 10px 0 7px 0;
+    background-color: #b1e1f9;
+    color: #21589f;
+    border-top: 1px solid #fff;
+    border-left: 1px solid #fff;
+}
+.rooms .room:hover .button.start {
+    background-color: #bee2f6;
+}
