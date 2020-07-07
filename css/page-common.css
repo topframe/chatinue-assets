@@ -71,11 +71,11 @@ input#for-automata-clear {
 }
 .header .button.sidebar-toggler {
     float: left;
+    margin-right: 2px;
     color: #fff;
     text-align: left;
     white-space: nowrap;
     background-color: transparent;
-    margin-right: 5px;
 }
 .header .button.sidebar-toggler img {
     width: 29px;
@@ -84,7 +84,7 @@ input#for-automata-clear {
 }
 .header .button.sidebar-toggler #totalPeople {
     float: right;
-    margin-left: 5px;
+    margin-left: 2px;
     padding-left: .4em;
     padding-right: .4em;
     text-align: center;
@@ -312,8 +312,8 @@ input#for-automata-clear {
 }
 .reveal.popup h2 img {
     width: 1.55em;
+    margin-right: 2px;
     vertical-align: bottom;
-    margin-right: .17em;
 }
 .reveal.popup h2 .iconfont {
     color: #e9f4f6;
