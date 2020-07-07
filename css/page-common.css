@@ -74,9 +74,10 @@ input#for-automata-clear {
     color: #fff;
     text-align: left;
     white-space: nowrap;
-    padding-left: 1.6em;
     border: 1px solid #68777b;
-    background: #516169 url("/assets/images/textchat.svg") 5px / 1.3em no-repeat;
+}
+.header .button.sidebar-toggler img {
+    width: 1.4em;
 }
 .header .button.sidebar-toggler:hover {
     background-color: #566a72;
