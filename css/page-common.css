@@ -72,14 +72,15 @@ input#for-automata-clear {
 .header .button.sidebar-toggler {
     float: left;
     margin-right: 2px;
+    padding-left: 0;
     color: #fff;
     text-align: left;
     white-space: nowrap;
     background-color: transparent;
 }
 .header .button.sidebar-toggler img {
-    width: 29px;
-    height: 29px;
+    width: 30px;
+    height: 30px;
     vertical-align: baseline;
 }
 .header .button.sidebar-toggler #totalPeople {
