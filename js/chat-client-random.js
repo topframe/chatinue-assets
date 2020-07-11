@@ -47,10 +47,10 @@ function makeRandomChatClient(chatClient) {
     chatClient.printUserJoinedMessage = function (payload, restored) {
         chatClient.removeConvoMessages();
         let chater = deserialize(payload.chater);
-        let html = chatClientMessages.userJoined.replace("[username]", "<strong>" + chater.username + "</strong>");
-        chatClient.printEventMessage(html, restored);
+        let userJoinedMsg = replaceMessageArguments(chatClientMessages.userJoined, "username", chater.username);
+        chatClient.printEventMessage(userJoinedMsg, restored);
         if (chater.description) {
-            let title = chatClientMessages.selfIntroductionTitle.replace("[username]", "<strong>" + chater.username + "</strong>");
+            let title = replaceMessageArguments(chatClientMessages.selfIntroductionTitle, "username", chater.username);
             let selfIntro = $("<div class='self-introduction'/>");
             $("<p class='self-introduction-title'/>").html(title).appendTo(selfIntro);
             $("<p class='description'/>").text(chater.description).appendTo(selfIntro);
@@ -68,8 +68,8 @@ function makeRandomChatClient(chatClient) {
 
     chatClient.printUserLeftMessage = function (payload, restored) {
         let chater = deserialize(payload.chater);
-        let html = chatClientMessages.userLeft.replace("[username]", "<strong>" + chater.username + "</strong>");
-        chatClient.printEventMessage(html, restored);
+        let userLeftMsg = replaceMessageArguments(chatClientMessages.userLeft, "username", chater.username);
+        chatClient.printEventMessage(userLeftMsg, restored);
         $(".message-box button.send").prop("disabled", true).addClass("pause");
         stopLooking();
     };

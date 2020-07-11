@@ -55,7 +55,7 @@ $(function () {
             if (description) {
                 let selfIntro = t.find(".self-introduction");
                 let selfIntroTitle = selfIntro.find(".self-introduction-title").html();
-                selfIntroTitle = selfIntroTitle.replace("[username]", "<strong>" + username + "</strong>");
+                selfIntroTitle = replaceMessageArguments(selfIntroTitle, "username", username);
                 selfIntro.find(".self-introduction-title").html(selfIntroTitle);
                 selfIntro.find(".description").text(description);
                 if (color) {
@@ -155,7 +155,8 @@ function makeStrangerChatClient(chatClient) {
 
     chatClient.printUserJoinedMessage = function (payload, restored) {
         let chater = deserialize(payload.chater);
-        chatClient.printEventMessage(chatClientMessages.userJoined.replace("[username]", "<strong>" + chater.username + "</strong>"));
+        let userJoinedMsg = replaceMessageArguments(chatClientMessages.userJoined, "username", chater.username);
+        chatClient.printEventMessage(userJoinedMsg);
     };
 
     chatClient.printUserLeftMessage = function (payload, restored) {
@@ -216,7 +217,7 @@ function newChatRequestTemplate(requestType, before, username) {
     let t = $(".chat-requests ." + requestType + ".template").clone().removeClass("template");
     if (username) {
         let title = t.find(".title").html();
-        title = title.replace("[username]", "<strong>" + username + "</strong>");
+        title = replaceMessageArguments(title, "username", username);
         t.find(".title").html(title);
     }
     t.hide();
@@ -246,7 +247,7 @@ function chatRequest(chater) {
     if (chater.description) {
         let selfIntro = t.find(".self-introduction");
         let selfIntroTitle = selfIntro.find(".self-introduction-title").html();
-        selfIntroTitle = selfIntroTitle.replace("[username]", "<strong>" + chater.username + "</strong>");
+        selfIntroTitle = replaceMessageArguments(selfIntroTitle, "username", chater.username);
         selfIntro.find(".self-introduction-title").html(selfIntroTitle);
         selfIntro.find(".description").text(chater.description);
         if (chater.color) {

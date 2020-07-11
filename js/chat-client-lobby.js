@@ -77,8 +77,8 @@ function makeLobbyChatClient(chatClient) {
             let roomInfo = deserialize(content.substring(14));
             let currentRoomLang = $(".rooms-options select[name=room_lang]").val();
             if (roomInfo.language === currentRoomLang) {
-                let html = chatClientMessages.roomCreated.replace("[roomName]", "<code>" + roomInfo.roomName + "</code>");
-                chatClient.printEventMessage(html);
+                let roomCreatedMsg = replaceMessageArguments(chatClientMessages.roomCreated, "roomName", roomInfo.roomName);
+                chatClient.printEventMessage(roomCreatedMsg);
                 refreshRooms(roomInfo.language);
             }
         } else if (content.startsWith("updatedPublicRoom:")) {
@@ -105,7 +105,8 @@ function makeLobbyChatClient(chatClient) {
 
     chatClient.printUserJoinedMessage = function (payload, restored) {
         let chater = deserialize(payload.chater);
-        chatClient.printEventMessage(chatClientMessages.userJoined.replace("[username]", "<strong>" + chater.username + "</strong>"));
+        let userJoinedMsg = replaceMessageArguments(chatClientMessages.userJoined, "username", chater.username);
+        chatClient.printEventMessage(userJoinedMsg);
     };
 
     chatClient.printUserLeftMessage = function (payload, restored) {

@@ -387,8 +387,8 @@ function ChatClientCore(chatClientSettings) {
     };
 
     this.printJoinMessage = function (chater, restored) {
-        let html = chatClientMessages.welcome.replace("[username]", "<strong>" + chater.username + "</strong>");
-        chatClient.printEventMessage(html, restored);
+        let welcomeMsg = replaceMessageArguments(chatClientMessages.welcome, "username", chater.username);
+        chatClient.printEventMessage(welcomeMsg, restored);
     };
 
     this.printUserJoinedMessage = function (payload, restored) {
@@ -413,10 +413,10 @@ function ChatClientCore(chatClientSettings) {
         let content = $("<p class='content'/>").addClass(event).data("event", event);
         switch (event) {
             case "user-joined":
-                content.append(chatClientMessages.userJoined.replace("[username]", "<strong>" + chater.username + "</strong>"));
+                content.append(replaceMessageArguments(chatClientMessages.userJoined, "username", chater.username));
                 break;
             case "user-left":
-                content.append(chatClientMessages.userLeft.replace("[username]", "<strong>" + chater.username + "</strong>"));
+                content.append(replaceMessageArguments(chatClientMessages.userLeft, "username", chater.username));
                 break;
             default:
                 console.error("Unknown user event: " + event);

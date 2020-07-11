@@ -6,6 +6,13 @@ function deserialize(str) {
     return JSON.parse(str);
 }
 
+function replaceMessageArguments(msg, argName, argValue, wrappingTagName) {
+    if (!wrappingTagName) {
+        wrappingTagName = "strong";
+    }
+    return msg.replace("[" + argName + "]", "<" + wrappingTagName + ">" + argValue + "</" + wrappingTagName + ">");
+}
+
 function setCookie(name, value, days) {
     let expires = "";
     if (days) {
