@@ -49,6 +49,7 @@ input#for-automata-clear {
     font-size: 1.2em;
     line-height: 30px;
     margin: 0;
+    padding-right: 4px;
     max-width: 100% !important;
     overflow: hidden !important;
     text-overflow: ellipsis;
@@ -295,17 +296,17 @@ input#for-automata-clear {
     left: 0;
     width: 100%;
     content: "";
-    box-shadow: 0 0 1.4em 3.6em #486571, 0 0 0 0 #e9f4f6;
+    box-shadow: 0 0 1.4em 3.7em #486571, 0 0 0 0 #e9f4f6;
     z-index: -1;
 }
 .reveal.popup.error:before {
-    box-shadow: 0 0 1.4em 3.6em #486571, 0 0 0 0 #e9f4f6;
+    box-shadow: 0 0 1.4em 3.7em #486571, 0 0 0 0 #e9f4f6;
 }
 .reveal.popup h2 {
     color: #fff;
     margin-top: -.1em;
     margin-bottom: 1.5em;
-    padding-right: .8em;
+    padding-right: 1em;
     font-size: 1.4em;
     text-shadow: rgba(0, 0, 0, .498039) 0 1px 2px;
     overflow: hidden;

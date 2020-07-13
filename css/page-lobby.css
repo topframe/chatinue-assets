@@ -60,7 +60,7 @@
 }
 .service .service-options .button.start {
     margin: 0;
-    border-radius: 18px 0 9px 0;
+    border-radius: 15px 0 9px 0;
     border-top: 1px solid #fff;
     border-left: 1px solid #fff;
     min-width: 12em;

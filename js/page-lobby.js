@@ -261,9 +261,9 @@ function refreshRooms(roomLang, recursable) {
                     room.appendTo($(".rooms")).hide().fadeIn();
                 }
             },
-            error: function (request, status, error) {
+            error: function () {
                 location.reload();
             }
         });
-    }, 400);
+    }, 100);
 }

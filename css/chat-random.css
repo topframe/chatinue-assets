@@ -31,16 +31,18 @@
 }
 .random #convo .message.custom .iconfont.banner.active {
     color: #1b838d;
-    -webkit-animation: heartbeat 1s infinite alternate;
-    animation: heartbeat 1s infinite alternate;
+    -webkit-animation: heartbeat 1.5s infinite alternate;
+    animation: heartbeat 1.5s infinite alternate;
 }
 @-webkit-keyframes heartbeat {
     0% { color: #1b838d; }
-    100% { color: transparent; }
+    30% { color: transparent; }
+    100% { color: transparent; text-shadow: 5px 5px 1px #eee; }
 }
 @keyframes heartbeat {
     0% { color: #1b838d; }
-    100% { color: transparent; }
+    50% { color: #aaa; text-shadow: 1px 1px 1px #ccc; }
+    100% { color: #709395;  text-shadow: 10px 10px 1px #ccc; }
 }
 .random #convo .message.custom h3 {
     color: #1b838d;
