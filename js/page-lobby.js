@@ -248,10 +248,12 @@ function refreshRooms(roomLang, recursable) {
                         $(".no-rooms .button.start").show();
                     }
                     $(".rooms .room:visible").remove();
+                    $(".rooms").hide();
                     $(".no-rooms").fadeIn();
                     return;
                 }
                 $(".no-rooms").hide();
+                $(".rooms").show();
                 $(".rooms .room:visible").remove();
                 for (let i in list) {
                     let roomInfo = list[i];
