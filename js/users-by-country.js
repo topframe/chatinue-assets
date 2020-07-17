@@ -48,7 +48,7 @@ const countryNames = {
     "CC": "Cocos (Keeling) Islands",
     "CO": "Colombia",
     "KM": "Comoros",
-    "CD": "Congo (the Democratic Republic of the)",
+    "CD": "Congo-Kinshasa",
     "CG": "Congo",
     "CK": "Cook Islands",
     "CR": "Costa Rica",

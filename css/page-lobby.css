@@ -233,7 +233,7 @@
     line-height: 1;
     font-size: 1.5em;
 }
-.rooms .room .button.start {
+.room .button.start {
     position: absolute;
     right: 0;
     bottom: 0;
@@ -244,6 +244,21 @@
     border-top: 1px solid #fff;
     border-left: 1px solid #fff;
 }
-.rooms .room:hover .button.start {
+.room:hover .button.start {
     background-color: #bee2f6;
+}
+.no-rooms {
+    display: none;
+}
+.no-rooms .room {
+    position: relative;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    padding: .5em .7em 1.5em;
+    color: #888;
+}
+.no-rooms .room .button.start {
+    border-radius: 10px 0 9px 0;
+    background-color: #ececec;
+    color: #21589f;
 }

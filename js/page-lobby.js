@@ -2,7 +2,7 @@ let recentlyCreatedRoomId;
 
 $(function () {
     $(".service a.guide").on("click", function () {
-       $(this).parent().find("p.guide").toggleClass("show-for-large");
+       $(this).parent().find("p.guide").toggleClass("show-for-medium");
     });
     $(".public-room-create").on("click", function () {
         if (!checkSignedIn()) {
@@ -239,11 +239,19 @@ function refreshRooms(roomLang, recursable) {
             success: function (list) {
                 if (!list || !list.length) {
                     if (recursable && roomLang !== "en") {
-                        refreshRooms("en", false);
+                        $(".no-rooms .button.start").hide();
+                        setTimeout(function () {
+                            sessionStorage.setItem("roomLang", "en");
+                            refreshRooms("en", false);
+                        }, 1500);
+                    } else {
+                        $(".no-rooms .button.start").show();
                     }
                     $(".rooms .room:visible").remove();
+                    $(".no-rooms").fadeIn();
                     return;
                 }
+                $(".no-rooms").hide();
                 $(".rooms .room:visible").remove();
                 for (let i in list) {
                     let roomInfo = list[i];
