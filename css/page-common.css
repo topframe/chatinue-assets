@@ -4,15 +4,7 @@
     box-sizing: border-box;
 }
 body {
-    background: #7b878c;
-}
-body:before {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    content: "";
-    box-shadow: 0 0 150px 200px rgb(49, 64, 70), 0 0 0 0 rgb(255, 255, 255);
+    background: #314046;
 }
 .grid-y.grid-frame {
     /*noinspection CssUnresolvedCustomProperty*/
@@ -290,28 +282,21 @@ input#for-automata-clear {
 .reveal.popup {
     background-color: #e9f4f6;
 }
-.reveal.popup:before {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    content: "";
-    box-shadow: 0 0 1.4em 3.5em #486571, 0 0 0 0 #e9f4f6;
-    z-index: -1;
-}
 .reveal.popup.error:before {
     box-shadow: 0 0 1.4em 3.7em #486571, 0 0 0 0 #e9f4f6;
 }
 .reveal.popup h2 {
-    color: #fff;
+    color: #1d5d77;
     margin-top: -.18em;
-    margin-bottom: 1.5em;
+    margin-bottom: 1em;
     padding-right: 1em;
+    padding-bottom: .35em;
+    border-bottom: 1px solid #668395;
     font-size: 1.25em;
-    text-shadow: rgba(0, 0, 0, .498039) 0 1px 2px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    text-align: center;
 }
 .reveal.popup h2 img {
     width: 1.55em;
@@ -326,7 +311,7 @@ input#for-automata-clear {
     padding: .4em .8em;
 }
 .reveal.popup .close-button {
-    color: #f5fffa;
+    color: #C45A4F;
 }
 .reveal.popup .banner {
     display: block;

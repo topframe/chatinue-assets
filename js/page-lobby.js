@@ -18,13 +18,10 @@ $(function () {
         }).each(function () {
             $("#form-public-room-create select[name=lang_cd]").val(userInfo.language);
         });
-        if ($("#captcha-container-public-room-create").is(":empty")) {
-            loadCaptcha("public_room_create", "captcha-container-public-room-create");
-        }
         $("#form-public-room-create input[name=room_nm]").focus();
     });
     $("#form-public-room-create").submit(function () {
-        executeCaptcha("public_room_create", doCreatePublicRoom);
+        doCreatePublicRoom();
         return false;
     });
     $("button.go-created-public-room").on("click", function () {
@@ -43,13 +40,10 @@ $(function () {
         $("#form-private-room-create").each(function () {
             this.reset();
         });
-        if ($("#captcha-container-private-room-create").is(":empty")) {
-            loadCaptcha("private_room_create", "captcha-container-private-room-create");
-        }
         $("#form-private-room-create input[name=room_nm]").focus();
     });
     $("#form-private-room-create").submit(function () {
-        executeCaptcha("private_room_create", doCreatePrivateRoom);
+        doCreatePrivateRoom();
         return false;
     });
     $("button.go-created-private-room").on("click", function () {
@@ -114,9 +108,6 @@ $(function () {
 });
 
 function doCreatePublicRoom() {
-    if (!recaptchaResponse) {
-        return;
-    }
     $("#form-public-room-create .form-error").hide();
     let roomName = $("#form-public-room-create input[name=room_nm]").val().trim();
     let langCode = $("#form-public-room-create select[name=lang_cd]").val().trim();
@@ -131,16 +122,11 @@ function doCreatePublicRoom() {
         dataType: 'json',
         data: {
             room_nm: roomName,
-            lang_cd: langCode,
-            recaptchaResponse: recaptchaResponse
+            lang_cd: langCode
         },
         success: function (result) {
             recentlyCreatedRoomId = null;
             switch (result) {
-                case "-1":
-                    alert("reCAPTCHA verification failed");
-                    location.reload();
-                    break;
                 case "-2":
                     $("#form-public-room-create .form-error.already-in-use").show();
                     $("#form-public-room-create input[name=room_nm]").select().focus();
@@ -164,9 +150,6 @@ function doCreatePublicRoom() {
 }
 
 function doCreatePrivateRoom() {
-    if (!recaptchaResponse) {
-        return;
-    }
     $("#form-private-room-create .form-error").hide();
     let roomName = $("#form-private-room-create input[name=room_nm]").val().trim();
     if (!roomName) {
@@ -179,8 +162,7 @@ function doCreatePrivateRoom() {
         type: 'post',
         dataType: 'json',
         data: {
-            room_nm: roomName,
-            recaptchaResponse: recaptchaResponse
+            room_nm: roomName
         },
         success: function (result) {
             recentlyCreatedRoomId = null;
@@ -275,5 +257,5 @@ function refreshRooms(roomLang, recursable) {
                 location.reload();
             }
         });
-    }, 100);
+    }, 10);
 }

@@ -18,7 +18,7 @@ $(function () {
             return false;
         }
         $("#form-sign-in input[name=username]").val(username);
-        executeCaptcha("sign_in", startSignIn);
+        startSignIn();
         return false;
     });
     $("#form-sign-in input[name=remember-me]").on("change", function () {
@@ -62,9 +62,6 @@ function checkSignedIn() {
 function openSignInPopup() {
     $("#common-sign-in").foundation('open');
     $("#form-sign-in .form-error").hide();
-    if ($("#captcha-container-sign-in").is(":empty")) {
-        loadCaptcha("sign_in", "captcha-container-sign-in");
-    }
     let username = localStorage.getItem("username");
     let description = localStorage.getItem("description");
     let favoriteColor = Number(localStorage.getItem("favoriteColor"));
@@ -110,9 +107,6 @@ function startSignIn() {
 }
 
 function doSignIn(username, description, favoriteColor) {
-    if (!recaptchaResponse) {
-        return;
-    }
     $.ajax({
         url: '/signin',
         type: 'post',
@@ -121,17 +115,12 @@ function doSignIn(username, description, favoriteColor) {
             username: username,
             description: description,
             favoriteColor: favoriteColor,
-            recaptchaResponse: recaptchaResponse,
             timeZone: getTimeZone()
         },
         success: function (result) {
             switch (result) {
                 case "0":
                     location.reload();
-                    break;
-                case "-1":
-                    closeWaitPopup();
-                    alert("reCAPTCHA verification failed");
                     break;
                 case "-2":
                     closeWaitPopup();
