@@ -17,11 +17,11 @@ function ChatClientCore(chatClientSettings) {
         if (extender) {
             extender(this);
         }
-        $("button.signout").off().click(function () {
-            $("button.signout").prop("disabled", true);
+        $("button.sign-out").off().click(function () {
+            $("button.sign-out").prop("disabled", true);
             chatClient.closeSocket();
             setTimeout(function () {
-                location.href = "/signout";
+                location.href = "/sign-out";
             }, 900);
         });
         $("button.leave").on("click", function () {

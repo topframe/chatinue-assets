@@ -5,11 +5,11 @@ $(function () {
         $(this).blur();
         toggleSidebar();
     });
-    $(".button.signin").on("click", function () {
+    $(".button.sign-in").on("click", function () {
         openSignInPopup();
     });
-    $(".button.signout").on("click", function () {
-        location.href = "/signout";
+    $(".button.sign-out").on("click", function () {
+        location.href = "/sign-out";
     });
     $("#form-sign-in").submit(function () {
         let username = $("#form-sign-in input[name=username]").val().trim();
@@ -108,7 +108,7 @@ function startSignIn() {
 
 function doSignIn(username, description, favoriteColor) {
     $.ajax({
-        url: '/signin',
+        url: '/sign-in',
         type: 'post',
         dataType: 'json',
         data: {

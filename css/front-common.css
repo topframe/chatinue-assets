@@ -103,16 +103,16 @@ input#for-automata-clear {
     background-color: #e02323;
     cursor: wait;
 }
-.header .button.signin {
+.header .button.sign-in {
     background-color: #2D844D;
 }
-.header .button.signin .iconfont {
+.header .button.sign-in .iconfont {
     color: #fff;
 }
-.header .button.signout {
+.header .button.sign-out {
     background-color: #C45A4F;
 }
-.header .button.signout:disabled {
+.header .button.sign-out:disabled {
     cursor: wait;
 }
 .footer {

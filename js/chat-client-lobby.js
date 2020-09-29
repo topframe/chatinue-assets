@@ -129,7 +129,7 @@ function makeLobbyChatClient(chatClient) {
     chatClient.leaveRoom = function (force) {
         chatClient.closeSocket();
         if (force) {
-            location.href = "/signout";
+            location.href = "/sign-out";
         } else {
             chatClient.gotoHome();
         }

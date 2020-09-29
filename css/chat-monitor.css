@@ -1,0 +1,154 @@
+.options {
+    margin-top: -15px;
+    padding: 10px 0;
+    font-size: 90%;
+    text-align: right;
+}
+ul.layout-options {
+    float: right;
+    list-style-type: none;
+    margin: 0;
+}
+ul.layout-options li {
+    float: left;
+    margin-left: .3em;
+    border: 1px solid #ccc;
+    padding: 0 .5em;
+    border-radius: 5px;
+    color: #777;
+}
+ul.layout-options li a {
+    color: #777;
+}
+ul.layout-options li.on {
+    background-color: #748fa0;
+    color: #fff;
+}
+ul.layout-options li.on a {
+    color: #fff;
+}
+
+.monitor .room .status-bar {
+    background-color: #677278;
+    color: #eee;
+    overflow: auto;
+    padding : 0 7px 0 10px;
+    height: 29px;
+}
+.monitor .room .status-bar.on {
+    background-color: #709185;
+}
+.monitor .room .status-bar h4 {
+    float: left;
+    width: 70%;
+    height: 29px;
+    line-height: 29px;
+    font-size: .9em;
+    font-weight: normal;
+    margin: 0;
+    display: none;
+}
+.monitor.tiled .room .status-bar h4 {
+    display: block;
+}
+.monitor .room .status-bar a {
+    float: right;
+    line-height: 29px;
+    margin-left: 10px;
+    color: #fff;
+}
+.monitor .room .status-bar a:hover {
+    color: #db4739;
+}
+.monitor .room .status-bar .tailing-switch {
+    line-height: 26px;
+}
+.monitor .room .status-bar .tailing-switch .tailing-status {
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+    vertical-align: middle;
+    border-radius: 50%;
+    position: relative;
+}
+.monitor .room .status-bar .tailing-switch .tailing-status::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    margin: auto;
+    display: block;
+    height: 10px;
+    width: 10px;
+    background: #f1f1f1;
+    border-radius: 50%;
+}
+.monitor .room .status-bar .tailing-switch .tailing-status.on {
+    background-color: #39aa56;
+}
+.monitor.tiled .tabs {
+    display: none;
+}
+.monitor.tiled .room.available {
+    display: block !important;
+    padding: 1px;
+}
+.monitor.tiled .room.available .convo {
+    height: 480px;
+}
+.monitor .convo {
+    clear: both;
+    margin: 0;
+    padding: 10px;
+    overflow: auto;
+    height: 540px;
+    background-color: #f0efe7;
+    border: none;
+    border-radius: 0;
+}
+.monitor .convo .message {
+    white-space: nowrap;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+.monitor .convo .message.event {
+    color: #2727c1;
+}
+.monitor .convo .message span {
+    padding: .1em .35em;
+}
+.monitor .convo .message .sender {
+    border-radius: 5px;
+    color: #333;
+    background-color: #fff;
+}
+.monitor .convo .message .sender.my-col-1 {
+    background-color: #fbd2d2;
+}
+.monitor .convo .message .sender.my-col-2 {
+    background-color: #ffe0c5;
+}
+.monitor .convo .message .sender.my-col-3 {
+    background-color: #f4ebac;
+}
+.monitor .convo .message .sender.my-col-4 {
+    background-color: #c0eabe;
+}
+.monitor .convo .message .sender.my-col-5 {
+    background-color: #c6e6fd;
+}
+.monitor .convo .message .sender.my-col-6 {
+    background-color: #d9d9fb;
+}
+.monitor .convo .message .sender.my-col-7 {
+    background-color: #f4cff3;
+}
+.monitor .convo .message .datetime {
+    border-radius: 5px;
+    color: #333;
+    background-color: #ceccc5;
+    font-size: .9em;
+}
