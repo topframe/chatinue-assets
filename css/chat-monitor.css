@@ -1,5 +1,4 @@
 .options {
-    margin-top: -15px;
     padding: 10px 0;
     font-size: 90%;
     text-align: right;
@@ -98,57 +97,70 @@ ul.layout-options li.on a {
 .monitor.tiled .room.available .convo {
     height: 480px;
 }
+.monitor .tabs .tabs-title.private .title {
+    color: #369d59;
+}
+.monitor .tabs .tabs-title.private.is-active .title {
+    color: #75ffa4;
+}
 .monitor .convo {
     clear: both;
     margin: 0;
-    padding: 10px;
+    padding: 0;
     overflow: auto;
     height: 540px;
-    background-color: #f0efe7;
+    background-color: #333;
     border: none;
     border-radius: 0;
 }
 .monitor .convo .message {
-    white-space: nowrap;
-    margin: 0;
-    padding: 0;
-    line-height: 1.6;
+    margin: .2em 0;
+    padding: .2em .6em .2em .2em;
+    line-height: 1;
+    width: max-content;
+    border-radius: 0 1em 1em 0;
+    background-color: #535353;
+    color: #fff;
 }
 .monitor .convo .message.event {
-    color: #2727c1;
+    color: #f7c25e;
 }
 .monitor .convo .message span {
     padding: .1em .35em;
 }
+.monitor .convo .message .flag {
+    width: 32px;
+    max-height: 20px;
+    margin-right: 4px;
+    vertical-align: text-bottom;
+}
 .monitor .convo .message .sender {
+    color: #fff;
+    background-color: #424242;
     border-radius: 5px;
-    color: #333;
-    background-color: #fff;
 }
 .monitor .convo .message .sender.my-col-1 {
-    background-color: #fbd2d2;
+    color: #fbd2d2;
 }
 .monitor .convo .message .sender.my-col-2 {
-    background-color: #ffe0c5;
+    color: #ffe0c5;
 }
 .monitor .convo .message .sender.my-col-3 {
-    background-color: #f4ebac;
+    color: #f4ebac;
 }
 .monitor .convo .message .sender.my-col-4 {
-    background-color: #c0eabe;
+    color: #c0eabe;
 }
 .monitor .convo .message .sender.my-col-5 {
-    background-color: #c6e6fd;
+    color: #c6e6fd;
 }
 .monitor .convo .message .sender.my-col-6 {
-    background-color: #d9d9fb;
+    color: #d9d9fb;
 }
 .monitor .convo .message .sender.my-col-7 {
-    background-color: #f4cff3;
+    color: #f4cff3;
 }
 .monitor .convo .message .datetime {
-    border-radius: 5px;
-    color: #333;
-    background-color: #ceccc5;
-    font-size: .9em;
+    color: #aaa;
+    font-size: .8em;
 }

@@ -4,8 +4,6 @@ function ChatMonitor(chatClientSettings) {
     let socket;
     let heartbeatTimer;
     let heartbeatCount = 0;
-    let chatAborted;
-    let justStayHere;
     let rooms = [];
 
     this.init = function (extender) {
@@ -16,10 +14,8 @@ function ChatMonitor(chatClientSettings) {
         if (extender) {
             extender(this);
         }
-        if (chatClientSettings.admissionToken && chatClientSettings.autoConnectEnabled !== false) {
-            setTimeout(function () {
-                chatMonitor.openSocket(chatClientSettings.admissionToken);
-            }, 300);
+        if (chatClientSettings.autoConnectEnabled !== false) {
+            chatMonitor.checkConnection(100);
         }
         available = true;
         return true;
@@ -30,6 +26,9 @@ function ChatMonitor(chatClientSettings) {
     };
 
     this.openSocket = function (token, params) {
+        if (!token) {
+            token = chatClientSettings.admissionToken;
+        }
         if (!token || token.length > 100) {
             chatMonitor.gotoHome();
             return;
@@ -45,6 +44,7 @@ function ChatMonitor(chatClientSettings) {
         url.protocol = url.protocol.replace('http:', 'ws:');
         socket = new WebSocket(url.href);
         socket.onopen = function (event) {
+            console.log("Websocket is opened");
             chatMonitor.heartbeatPing();
         };
         socket.onmessage = function (event) {
@@ -54,15 +54,12 @@ function ChatMonitor(chatClientSettings) {
             }
         };
         socket.onclose = function (event) {
-            if (chatAborted) {
-                chatMonitor.closeSocket();
-                if (!justStayHere) {
-                    chatMonitor.gotoHome();
-                }
-            } else {
-                chatMonitor.closeSocket();
-                chatMonitor.checkConnection(100);
+            console.log("Websocket is closed", event);
+            chatMonitor.closeSocket();
+            if (event.reason) {
+                alert(event.reason);
             }
+            chatMonitor.checkConnection(100);
         };
         socket.onerror = function (event) {
             console.error("WebSocket error observed:", event);
@@ -83,7 +80,7 @@ function ChatMonitor(chatClientSettings) {
                     heartbeatCount++;
                     if (heartbeatCount % chatClientSettings.pingPerHeartbeats === 0) {
                         $.ajax({
-                            url: '/ping',
+                            url: '/admin/ping',
                             type: 'get',
                             dataType: 'text',
                             success: function (result) {
@@ -104,22 +101,23 @@ function ChatMonitor(chatClientSettings) {
     this.checkConnection = function (delay) {
         setTimeout(function () {
             $.ajax({
-                url: '/ping',
+                url: '/admin/monitor/getToken',
                 type: 'get',
                 dataType: 'text',
                 timeout: 30000,
-                success: function (result) {
-                    if (result === "pong" && !chatAborted) {
-                        chatMonitor.reloadPage();
+                success: function (token) {
+                    if (token) {
+                        $("#connection-lost").foundation('close');
+                        chatMonitor.openSocket(token);
                     } else {
                         chatMonitor.gotoHome();
                     }
                 },
                 error: function () {
-                    let retries = $("#common-connection-lost").data("retries") || 0;
-                    $("#common-connection-lost").data("retries", retries + 1);
+                    let retries = $("#connection-lost").data("retries") || 0;
+                    $("#connection-lost").data("retries", retries + 1);
                     if (retries === 0) {
-                        $("#common-connection-lost").foundation('open');
+                        $("#connection-lost").foundation('open');
                     } else if (retries > 25) {
                         console.log("Abandon reconnection");
                         return;
@@ -147,6 +145,7 @@ function ChatMonitor(chatClientSettings) {
     this.handleMessage = function (chatMessage) {
         Object.getOwnPropertyNames(chatMessage).forEach(function (val, idx, array) {
             let payload = chatMessage[val];
+            console.log(val, payload);
             if (payload) {
                 switch (val) {
                     case "heartBeat": {
@@ -156,8 +155,12 @@ function ChatMonitor(chatClientSettings) {
                         break;
                     }
                     default: {
-                        console.log(val, payload);
-                        chatMonitor.printMessage(val, payload);
+                        if (payload.content && payload.content.startsWith("usersByCountry:")) {
+                            let usersByCountry = deserialize(payload.content.substring(15));
+                            drawUsersByCountry(usersByCountry);
+                        } else {
+                            chatMonitor.printMessage(val, payload);
+                        }
                         break;
                     }
                 }
@@ -184,10 +187,7 @@ function ChatMonitor(chatClientSettings) {
     };
 
     this.printMessage = function (type, payload) {
-        if (!payload.chater) {
-            return false;
-        }
-        let roomId = payload.roomId;
+        let roomId = payload.roomId||"log";
         let room = chatMonitor.touchRoom(roomId);
         let convo = room.find(".convo");
         switch (type) {
@@ -208,26 +208,38 @@ function ChatMonitor(chatClientSettings) {
     };
 
     this.makeMessage = function (payload, isEvent) {
-        let chater = deserialize(payload.chater);
-        let sender = $("<span class='sender'/>")
-            .text(chater.username)
-            .attr("title", chater.description);
-        if (chater.color) {
-            sender.addClass("my-col-" + chater.color);
-        }
-        let content = $("<span class='content'/>")
-            .text(payload.content);
-        let message = $("<p class='message'/>")
-            .data("user-no", chater.userNo)
-            .data("username", chater.username)
-            .append(sender)
-            .append(content);
-        if (isEvent) {
-            message.addClass("event");
+        let message = $("<p class='message'/>");
+        if (payload.chater) {
+            let chater = deserialize(payload.chater);
+            let sender = $("<span class='sender'/>")
+                .text(chater.username)
+                .attr("title", chater.description);
+            if (chater.color) {
+                sender.addClass("my-col-" + chater.color);
+            }
+            let content = $("<span class='content'/>")
+                .text(payload.content);
+            message.data("user-no", chater.userNo)
+                .data("username", chater.username)
+                .append(sender)
+                .append(content);
+            if (chater.country) {
+                let flag = $("<img class='flag'/>");
+                flag.attr("src", "/assets/flags/" + chater.country.toLowerCase() + ".svg");
+                flag.attr("title", countryNames[chater.country]);
+                message.prepend(flag);
+            }
+            if (isEvent) {
+                message.addClass("event");
+            }
+        } else {
+            $("<span class='content'/>")
+                .text(payload.content)
+                .appendTo(message);
         }
         if (payload.datetime) {
-            let datetime = moment.utc(payload.datetime).local().format("L LT");
-            message.append("<span class='datetime'>" + datetime + "</span>");
+            let datetime = moment.utc(payload.datetime).local().format("LTS");
+            $("<span class='datetime'/>").text(datetime).appendTo(message);
         }
         return message;
     };
@@ -238,10 +250,14 @@ function ChatMonitor(chatClientSettings) {
             let room = $(".room").eq(0).hide().clone();
             room.data("room-id", roomId);
             room.addClass("available");
-            room.appendTo(".monitor");
             room.find("h4").text(roomId);
             room.data("tailing", true);
             room.find(".tailing-status").addClass("on");
+            if (roomId === "log") {
+                $(".monitor .room").eq(0).after(room);
+            } else {
+                room.appendTo(".monitor");
+            }
             if (monitor.hasClass("tiled") || $(".room:visible").length === 0) {
                 room.show();
             }
@@ -250,16 +266,20 @@ function ChatMonitor(chatClientSettings) {
                 room.addClass(cellSize);
             }
             let tab = $(".tabs-title").eq(0).hide().clone();
-            tab.data("index", $(".tabs-title.available").length);
             tab.data("room-id", roomId);
             tab.find(".title").text(roomId);
             tab.addClass("available");
-            tab.appendTo(".tabs").show();
+            if (roomId === "log") {
+                $(".monitor .tabs-title").eq(0).after(tab);
+            } else {
+                tab.appendTo(".tabs");
+            }
+            tab.show();
             if ($(".tabs-title:visible").length === 1) {
                 $(".tabs-title.available").removeClass("is-active").eq(0).addClass("is-active");
             }
             setTimeout(function () {
-                chatMonitor.getRoomName(roomId);
+                chatMonitor.updateRoomName(roomId, room, tab);
             }, 1);
             rooms[roomId] = room;
             return room
@@ -268,7 +288,59 @@ function ChatMonitor(chatClientSettings) {
         }
     };
 
-    this.getRoomName = function (roomId) {
+    this.removeRoom = function (roomId) {
+        let room;
+        $(".room").filter(function () {
+            return $(this).data("room-id") === roomId;
+        }).each(function () {
+            room = $(this).hide();
+        });
+        let tab;
+        $(".tabs-title").filter(function () {
+            return $(this).data("room-id") === roomId;
+        }).each(function () {
+            tab = $(this).hide();
+        });
+        if (!$(".monitor").hasClass("tiled")) {
+            if (room) {
+                if (!room.prev(".room.available").show().length) {
+                    room.next(".room.available").show();
+                }
+            }
+            if (tab) {
+                if (!tab.prev(".tabs-title.available").addClass("is-active").show().length) {
+                    tab.next(".tabs-title.available").addClass("is-active").show();
+                }
+            }
+        }
+        if (room) {
+            room.remove();
+        }
+        if (tab) {
+            tab.remove();
+        }
+        rooms[roomId] = null;
+    };
+
+    this.updateRoomName = function (roomId, room, tab) {
+        if (roomId === "log") {
+            let roomName = "Events";
+            room.find("h4").text(roomName);
+            tab.find(".title").text(roomName).attr("title", roomId);
+            return;
+        } else if (roomId.startsWith("str:")) {
+            let roomName = "Stranger Chat (" + roomId + ")";
+            room.find("h4").text(roomName);
+            tab.find(".title").text(roomName).attr("title", roomId);
+            return;
+        } else if (roomId.startsWith("pri:")) {
+            tab.addClass("private");
+        } else if (roomId.indexOf(":") !== -1) {
+            let roomName = "Exchange Chat (" + roomId + ")";
+            room.find("h4").text(roomName);
+            tab.find(".title").text(roomName).attr("title", roomId);
+            return;
+        }
         $.ajax({
             url: '/admin/monitor/getRoomName',
             data: {
@@ -277,16 +349,10 @@ function ChatMonitor(chatClientSettings) {
             type: 'get',
             dataType: 'text',
             success: function (roomName) {
-                $(".room").filter(function () {
-                    return $(this).data("room-id") === roomId;
-                }).each(function () {
-                    $(this).find("h4").text(roomName);
-                });
-                $(".tabs-title").filter(function () {
-                    return $(this).data("room-id") === roomId;
-                }).each(function () {
-                    $(this).find(".title").text(roomName);
-                });
+                if (roomName) {
+                    room.find("h4").text(roomName);
+                    tab.find(".title").text(roomName).attr("title", roomId);
+                }
             },
             error: function () {
                 alert("Failed to get room name");
@@ -321,23 +387,39 @@ $(function () {
             default:
                 monitor.removeClass("tiled").data("cell-size", "");
                 rooms.removeClass("large-3 large-4 large-6");
-                let index = $(".tabs-title.available.is-active").data("index");
-                rooms.hide().eq(index).show();
+                let tab = $(".tabs-title.available.is-active");
+                let roomId = tab.data("room-id");
+                if (roomId) {
+                    rooms.each(function () {
+                       if ($(this).data("room-id") === roomId) {
+                           $(this).show();
+                       } else {
+                           $(this).hide();
+                       }
+                    });
+                }
                 break;
         }
     });
-
     $(".tabs").delegate(".tabs-title.available a", "click", function() {
         $(".tabs-title").removeClass("is-active");
         let tab = $(this).closest(".tabs-title");
-        let index = tab.data("index");
+        let roomId = tab.data("room-id");
         tab.addClass("is-active");
-        $(".room.available").hide().eq(index).show();
+        $(".room.available").each(function () {
+            if ($(this).data("room-id") === roomId) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
     });
-    $(".monitor").delegate(".room .status-bar .clear-screen", "click", function() {
-        $(this).closest(".room").find(".convo").empty();
+    $(".monitor").delegate(".room.available .status-bar .remove-room", "click", function() {
+        let room = $(this).closest(".room");
+        let roomId = room.data("room-id");
+        chatMonitor.removeRoom(roomId);
     });
-    $(".monitor").delegate(".room .status-bar .tailing-switch", "click", function() {
+    $(".monitor").delegate(".room.available .status-bar .tailing-switch", "click", function() {
         let room = $(this).closest(".room");
         if (room.data("tailing")) {
             room.data("tailing", false);

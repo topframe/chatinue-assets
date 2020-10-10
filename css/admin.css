@@ -2,7 +2,7 @@ body.admin-blank {
     background: #314046;
 }
 #navigation .title-bar .title-bar-left a.logo {
-    background: url("/assets/images/textchat.svg") no-repeat;
+    background: url("/assets/images/chatinue.svg") no-repeat;
     background-size: cover;
 }
 #navigation .top-bar .top-bar-logo .circle {
@@ -14,7 +14,7 @@ body.admin-blank {
 #navigation .top-bar .top-bar-logo .circle a.logo {
     width: 60px;
     height: 60px;
-    background: url("/assets/images/textchat.svg") no-repeat;
+    background: url("/assets/images/chatinue.svg") no-repeat;
     background-size: cover;
 }
 #navigation.fixed .top-bar .top-bar-logo .circle {
@@ -22,7 +22,7 @@ body.admin-blank {
     background-color: transparent;
 }
 #navigation.fixed .top-bar .top-bar-logo .circle a.logo {
-    background: url("/assets/images/textchat.svg") no-repeat;
+    background: url("/assets/images/chatinue.svg") no-repeat;
     background-size: cover;
 }
 .top-bar .settings .button {
