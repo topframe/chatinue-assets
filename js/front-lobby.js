@@ -178,7 +178,7 @@ function doCreatePrivateRoom() {
                         return;
                     }
                     recentlyCreatedRoomId = result;
-                    let url = "https://chatinue.club/private/" + result;
+                    let url = "https://chatinue.com/private/" + result;
                     $("#form-private-room-create input[name=room_nm]").val("");
                     $("#lobby-private-room-create").foundation('close');
                     $("#lobby-private-room-create-complete").foundation('open');
