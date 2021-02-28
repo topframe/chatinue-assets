@@ -43,7 +43,7 @@ function ChatClientCore(chatClientSettings) {
             hideSidebar();
         });
         $("#form-send-message").submit(function () {
-            if (!$("#message").val()) {
+            if (!socket || !$("#message").val()) {
                 return false;
             }
             if (frequentlySentCount > 1) {
