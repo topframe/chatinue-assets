@@ -28,13 +28,13 @@ function ChatClientCore(chatClientSettings) {
             $("button.leave").prop("disabled", true);
             chatClient.closeSocket();
             setTimeout(function () {
-                chatClient.leaveRoom();
+                chatClient.leaveChat();
             }, 500);
         });
         $("#contacts").on("click", ".contact", function () {
-            $(".description", this).toggle();
+            $(".aboutMe", this).toggle();
         }).on("mouseleave", ".contact", function () {
-            $(".description", this).hide();
+            $(".aboutMe", this).hide();
         });
         $("#convo").on("click", ".message.event.group .more", function () {
             $(this).parent().toggleClass("all-visible");
@@ -50,7 +50,7 @@ function ChatClientCore(chatClientSettings) {
                 return false;
             }
             $("#for-automata-clear").focus();
-            if (userInfo.userNo) {
+            if (userInfo.userId) {
                 chatClient.sendMessage();
             }
             frequentlySentCount++;
@@ -66,9 +66,9 @@ function ChatClientCore(chatClientSettings) {
             }, 1000);
             return false;
         });
-        if (chatClientSettings.admissionToken && chatClientSettings.autoConnectEnabled !== false) {
+        if (chatClientSettings.talkerToken && chatClientSettings.autoConnectEnabled !== false) {
             setTimeout(function () {
-                chatClient.openSocket(chatClientSettings.admissionToken);
+                chatClient.openSocket(chatClientSettings.talkerToken);
             }, 300);
         }
         available = true;
@@ -80,7 +80,7 @@ function ChatClientCore(chatClientSettings) {
     };
 
     this.openSocket = function (token, params) {
-        if (!token || token.length > 100) {
+        if (!token || token.length > 127) {
             chatClient.gotoHome();
             return;
         }
@@ -95,14 +95,6 @@ function ChatClientCore(chatClientSettings) {
         url.protocol = url.protocol.replace('http:', 'ws:');
         socket = new WebSocket(url.href);
         socket.onopen = function (event) {
-            let chatMessage = {
-                message: {
-                    type: 'JOIN',
-                    userNo: userInfo.userNo,
-                    username: userInfo.username
-                }
-            };
-            chatClient.sendMessage(serialize(chatMessage));
             chatClient.heartbeatPing();
         };
         socket.onmessage = function (event) {
@@ -112,11 +104,8 @@ function ChatClientCore(chatClientSettings) {
             }
         };
         socket.onclose = function (event) {
-            if (chatAborted) {
-                chatClient.closeSocket();
-                if (!justStayHere) {
-                    chatClient.gotoHome();
-                }
+            if (event.code === 1008 && event.reason === "redundant") {
+                chatClient.redundantJoin();
             } else {
                 chatClient.closeSocket();
                 chatClient.checkConnection(100);
@@ -136,7 +125,7 @@ function ChatClientCore(chatClientSettings) {
         heartbeatTimer = setTimeout(function () {
             if (socket) {
                 let chatMessage = {
-                    heartBeat: "-ping-"
+                    heartbeat: "-ping-"
                 };
                 chatClient.sendMessage(serialize(chatMessage));
                 chatClient.heartbeatPing();
@@ -149,11 +138,11 @@ function ChatClientCore(chatClientSettings) {
                             dataType: 'text',
                             success: function (result) {
                                 if (result !== "pong") {
-                                    chatClient.leaveRoom();
+                                    chatClient.leaveChat();
                                 }
                             },
                             error: function () {
-                                chatClient.leaveRoom();
+                                chatClient.leaveChat();
                             }
                         });
                     }
@@ -200,7 +189,7 @@ function ChatClientCore(chatClientSettings) {
         }
     };
 
-    this.leaveRoom = function (force) {
+    this.leaveChat = function (force) {
         chatClient.closeSocket();
         chatClient.gotoHome();
     };
@@ -210,11 +199,10 @@ function ChatClientCore(chatClientSettings) {
             pendedMessages.push(chatMessage);
             return;
         }
-        Object.getOwnPropertyNames(chatMessage).forEach(function (val, idx, array) {
-            let payload = chatMessage[val];
+        Object.entries(chatMessage).forEach(([messageType, payload]) => {
             if (payload) {
-                switch (val) {
-                    case "heartBeat": {
+                switch (messageType) {
+                    case "heartbeat": {
                         if (payload === "-pong-") {
                             chatClient.heartbeatPing();
                         }
@@ -224,49 +212,32 @@ function ChatClientCore(chatClientSettings) {
                         chatClient.printMessage(payload);
                         break;
                     }
+                    case "notice": {
+                        chatClient.printNotice(payload);
+                        break;
+                    }
                     case "userJoined": {
-                        chatClient.addChater(deserialize(payload.chater));
+                        chatClient.addTalker(deserialize(payload.talker));
                         chatClient.printUserJoinedMessage(payload);
                         break;
                     }
                     case "userLeft": {
-                        chatClient.removeChater(payload.userNo);
+                        chatClient.removeTalker(payload.userId);
                         chatClient.printUserLeftMessage(payload);
                         break;
                     }
                     case "join": {
                         pendedMessages = [];
-                        chatClient.setChaters(payload.chaters);
+                        chatClient.setTalkers(payload.talkers);
                         if (payload.recentConvo) {
                             chatClient.printRecentConvo(payload.recentConvo);
                         }
-                        let chater = deserialize(payload.chater);
-                        chatClient.printJoinMessage(chater);
+                        let talker = deserialize(payload.talker);
+                        chatClient.printJoinMessage(talker);
                         while (pendedMessages && pendedMessages.length > 0) {
                             chatClient.handleMessage(pendedMessages.pop());
                         }
                         pendedMessages = null;
-                        break;
-                    }
-                    case "abort": {
-                        chatAborted = true;
-                        justStayHere = false;
-                        switch (payload.cause) {
-                            case "exists":
-                                alert("Username already in use. Please sign in again.");
-                                chatClient.leaveRoom(true);
-                                break;
-                            case "rejoin":
-                                justStayHere = true;
-                                chatClient.clearChaters();
-                                chatClient.clearConvo();
-                                chatClient.closeSocket();
-                                $("#chat-duplicate-join").foundation('open');
-                                break;
-                            default:
-                                justStayHere = true;
-                                chatClient.serviceNotAvailable();
-                        }
                         break;
                     }
                 }
@@ -282,85 +253,79 @@ function ChatClientCore(chatClientSettings) {
         }
     };
 
-    this.sendMessage = function (message) {
-        if (message) {
-            socket.send(message);
+    this.sendMessage = function (text) {
+        if (text) {
+            socket.send(text);
             return;
         }
         let $msg = $("#message");
-        let content = $msg.val().trim();
-        if (content) {
-            let chatMessage = {
-                message: {
-                    type: 'POST',
-                    userNo: userInfo.userNo,
-                    username: userInfo.username,
-                    content: content
-                }
+        let val = $msg.val().trim();
+        if (val) {
+            let message = {
+                text: val
             };
             $msg.val('');
-            socket.send(serialize(chatMessage));
+            socket.send(serialize(message));
             $msg.focus();
         }
     };
 
-    this.setChaters = function (chaters) {
-        if (chaters) {
-            for (let i in chaters) {
-                let str = chaters[i];
-                let index = str.indexOf(':');
-                if (index > -1) {
-                    let chater = deserialize(str.substring(index + 1));
-                    chatClient.addChater(chater);
-                }
+    this.setTalkers = function (talkers) {
+        if (talkers) {
+            console.log("talkers", talkers);
+            for (let i in talkers) {
+                let str = talkers[i];
+                console.log("addTalker", str);
+                console.log(deserialize(str));
+                chatClient.addTalker(deserialize(str));
             }
             chatClient.updateTotalPeople();
         }
     };
 
-    this.addChater = function (chater) {
+    this.addTalker = function (talker) {
         let contact = $("<li class='contact'/>")
-            .data("user-no", chater.userNo)
-            .data("username", chater.username)
-            .data("color", chater.color);
+            .data("user-id", talker.userId)
+            .data("user-name", talker.userName)
+            .data("color", talker.color);
         let status = $("<div/>").addClass("status");
-        if (chater.color) {
-            status.addClass("my-col-" + chater.color);
+        if (talker.color) {
+            status.addClass("my-col-" + talker.color);
         }
         let badge = $("<i class='iconfont fi-mountains'/>");
-        let name = $("<p class='name'/>").text(chater.username);
+        let name = $("<p class='name'/>").text(talker.userName);
         contact.append(status.append(badge)).append(name);
-        if (chater.description) {
-            let description = $("<p class='description'/>").text(chater.description);
-            contact.append(description);
-            contact.addClass("has-description");
+        if (talker.aboutMe) {
+            let aboutMe = $("<p class='aboutMe'/>").text(talker.aboutMe);
+            contact.append(aboutMe);
+            contact.addClass("has-aboutMe");
         }
         contact.appendTo($("#contacts"));
-        if (chater.country) {
+        if (talker.country) {
             let flag = $("<img class='flag'/>");
-            flag.attr("src", chatClientSettings.cdnAssetsUrl + "/flags/" + chater.country.toLowerCase() + ".svg");
-            flag.attr("title", chater.country);
+            flag.attr("src", chatClientSettings.cdnAssetsUrl + "/flags/" + talker.country.toLowerCase() + ".svg");
+            flag.attr("title", talker.country);
             contact.append(flag);
         }
-        if (userInfo.userNo === chater.userNo) {
+        if (userInfo.userId === talker.userId) {
             contact.addClass("me");
         }
         chatClient.updateTotalPeople();
     };
 
-    this.removeChater = function (userNo) {
-        chatClient.findUser(userNo).remove();
+    this.removeTalker = function (id) {
+        chatClient.findUser(id).remove();
         chatClient.updateTotalPeople();
     };
 
-    this.findUser = function (userNo) {
+    this.findUser = function (userId) {
         return $("#contacts .contact")
             .filter(function () {
-                return ($(this).data("user-no") === userNo);
+                return ($(this).data("user-id") === userId);
             });
     };
 
-    this.clearChaters = function () {
+    this.clearTalkers = function () {
         $("#contacts").empty();
         chatClient.updateTotalPeople();
     };
@@ -386,8 +351,8 @@ function ChatClientCore(chatClientSettings) {
         }
     };
 
-    this.printJoinMessage = function (chater, restored) {
-        let welcomeMsg = replaceMessageArguments(chatClientMessages.welcome, "username", chater.username);
+    this.printJoinMessage = function (talker, restored) {
+        let welcomeMsg = replaceMessageArguments(chatClientMessages.welcome, "name", talker.userName);
         chatClient.printEventMessage(welcomeMsg, restored);
     };
 
@@ -404,19 +369,19 @@ function ChatClientCore(chatClientSettings) {
         let last = convo.find(".message").last();
         let container = null;
         if (last.length) {
-            let userNo = last.data("user-no");
-            if (last.hasClass("event") && payload.userNo === userNo) {
+            let userId = last.data("user-id");
+            if (last.hasClass("event") && payload.userId === userId) {
                 container = last;
             }
         }
-        let chater = deserialize(payload.chater);
+        let talker = deserialize(payload.talker);
         let content = $("<p class='content'/>").addClass(event).data("event", event);
         switch (event) {
             case "user-joined":
-                content.append(replaceMessageArguments(chatClientMessages.userJoined, "username", chater.username));
+                content.append(replaceMessageArguments(chatClientMessages.userJoined, "name", talker.userName));
                 break;
             case "user-left":
-                content.append(replaceMessageArguments(chatClientMessages.userLeft, "username", chater.username));
+                content.append(replaceMessageArguments(chatClientMessages.userLeft, "name", talker.userName));
                 break;
             default:
                 console.error("Unknown user event: " + event);
@@ -449,12 +414,12 @@ function ChatClientCore(chatClientSettings) {
             }
         } else {
             let message = $("<div class='message event'/>")
-                .data("user-no", payload.userNo)
+                .data("user-id", payload.userId)
                 .append(content);
-            if (!restored && chater.description && event === "user-joined") {
-                let selfIntro = $("<p class='self-introduction'/>").text(chater.description);
-                if (chater.color) {
-                    selfIntro.addClass("my-col-" + chater.color);
+            if (!restored && talker.aboutMe && event === "user-joined") {
+                let selfIntro = $("<p class='about-me'/>").text(talker.aboutMe);
+                if (talker.color) {
+                    selfIntro.addClass("my-col-" + talker.color);
                 }
                 message.append(selfIntro);
             }
@@ -466,9 +431,9 @@ function ChatClientCore(chatClientSettings) {
     };
 
     this.printMessage = function (payload, restored) {
-        let chater = deserialize(payload.chater);
+        let talker = deserialize(payload.talker);
         let convo = $("#convo");
-        let content = $("<p class='content'/>").text(payload.content);
+        let content = $("<p class='content'/>").text(payload.text);
         if (payload.datetime) {
             let datetime = moment.utc(payload.datetime).local();
             let hours = moment.duration(moment().diff(datetime)).asHours();
@@ -476,29 +441,32 @@ function ChatClientCore(chatClientSettings) {
                 datetime.format(hours < 24 ? "LTS" : "L LT") + "</span>");
         }
         let last = convo.find(".message").last();
-        if (last.length && !last.hasClass("event") && last.data("user-no") === chater.userNo) {
+        if (last.length && !last.hasClass("event") && last.data("user-id") === talker.userId) {
             if (restored) {
                 last.addClass("restored");
             }
             last.append(content);
         } else {
-            let myself = (userInfo.userNo === chater.userNo);
-            let sender = $("<span class='username'/>").text(chater.username);
+            let myself = (userInfo.userId === talker.userId);
+            let sender = $("<span class='name'/>").text(talker.userName);
             let message = $("<div/>")
                 .addClass(myself ? "message sent" : "message received")
-                .data("user-no", chater.userNo)
-                .data("username", chater.username)
+                .data("user-id", talker.userId)
+                .data("user-name", talker.userName)
                 .append(sender).append(content);
             if (restored) {
                 message.addClass("restored");
-            } else if (chater.color) {
-                message.addClass("my-col-" + chater.color);
+            } else if (talker.color) {
+                message.addClass("my-col-" + talker.color);
             }
             convo.append(message);
         }
         if (!restored) {
             chatClient.scrollToBottom(convo);
         }
+    };
+
+    this.printNotice = function (payload) {
     };
 
     this.printEventMessage = function (html, restored) {
@@ -512,21 +480,19 @@ function ChatClientCore(chatClientSettings) {
         }
     };
 
-    this.printCustomMessage = function (content) {
+    this.printCustomMessage = function (html) {
         let convo = $("#convo");
         $("<div class='message custom'/>")
-            .append(content)
+            .append(html)
             .appendTo(convo);
         chatClient.scrollToBottom(convo);
     };
 
     this.printRecentConvo = function (chatMessages) {
-        for (let i in chatMessages) {
-            let chatMessage = chatMessages[i];
-            Object.getOwnPropertyNames(chatMessage).forEach(function (val, idx, array) {
-                let payload = chatMessage[val];
+        for (let chatMessage of chatMessages) {
+            Object.entries(chatMessage).forEach(([messageType, payload]) => {
                 if (payload) {
-                    switch (val) {
+                    switch (messageType) {
                         case "broadcast": {
                             chatClient.printMessage(payload, true);
                             break;
@@ -544,6 +510,14 @@ function ChatClientCore(chatClientSettings) {
             });
         }
         chatClient.scrollToBottom($("#convo"), false);
+    };
+
+    this.redundantJoin = function () {
+        justStayHere = true;
+        chatClient.clearTalkers();
+        chatClient.clearConvo();
+        chatClient.closeSocket();
+        $("#chat-redundant-join").foundation('open');
     };
 
     this.scrollToBottom = function (container, animate) {

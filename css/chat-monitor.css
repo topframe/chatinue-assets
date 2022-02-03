@@ -27,17 +27,17 @@ ul.layout-options li.on a {
     color: #fff;
 }
 
-.monitor .room .status-bar {
+.monitor .chat .status-bar {
     background-color: #677278;
     color: #eee;
     overflow: auto;
     padding : 0 7px 0 10px;
     height: 29px;
 }
-.monitor .room .status-bar.on {
+.monitor .chat .status-bar.on {
     background-color: #709185;
 }
-.monitor .room .status-bar h4 {
+.monitor .chat .status-bar h4 {
     float: left;
     width: 70%;
     height: 29px;
@@ -47,22 +47,22 @@ ul.layout-options li.on a {
     margin: 0;
     display: none;
 }
-.monitor.tiled .room .status-bar h4 {
+.monitor.tiled .chat .status-bar h4 {
     display: block;
 }
-.monitor .room .status-bar a {
+.monitor .chat .status-bar a {
     float: right;
     line-height: 29px;
     margin-left: 10px;
     color: #fff;
 }
-.monitor .room .status-bar a:hover {
+.monitor .chat .status-bar a:hover {
     color: #db4739;
 }
-.monitor .room .status-bar .tailing-switch {
+.monitor .chat .status-bar .tailing-switch {
     line-height: 26px;
 }
-.monitor .room .status-bar .tailing-switch .tailing-status {
+.monitor .chat .status-bar .tailing-switch .tailing-status {
     display: inline-block;
     height: 20px;
     width: 20px;
@@ -70,7 +70,7 @@ ul.layout-options li.on a {
     border-radius: 50%;
     position: relative;
 }
-.monitor .room .status-bar .tailing-switch .tailing-status::after {
+.monitor .chat .status-bar .tailing-switch .tailing-status::after {
     content: "";
     position: absolute;
     top: 0;
@@ -84,17 +84,17 @@ ul.layout-options li.on a {
     background: #f1f1f1;
     border-radius: 50%;
 }
-.monitor .room .status-bar .tailing-switch .tailing-status.on {
+.monitor .chat .status-bar .tailing-switch .tailing-status.on {
     background-color: #39aa56;
 }
 .monitor.tiled .tabs {
     display: none;
 }
-.monitor.tiled .room.available {
+.monitor.tiled .chat.available {
     display: block !important;
     padding: 1px;
 }
-.monitor.tiled .room.available .convo {
+.monitor.tiled .chat.available .convo {
     height: 480px;
 }
 .monitor .tabs .tabs-title.private .title {

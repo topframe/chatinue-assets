@@ -12,19 +12,19 @@ $(function () {
         location.href = "/sign-out";
     });
     $("#form-sign-in").submit(function () {
-        let username = $("#form-sign-in input[name=username]").val().trim();
-        if (!username) {
-            $("#form-sign-in input[name=username]").focus();
+        let name = $("#form-sign-in input[name=name]").val().trim();
+        if (!name) {
+            $("#form-sign-in input[name=name]").focus();
             return false;
         }
-        $("#form-sign-in input[name=username]").val(username);
+        $("#form-sign-in input[name=name]").val(name);
         startSignIn();
         return false;
     });
     $("#form-sign-in input[name=remember-me]").on("change", function () {
         if (!this.checked) {
-            localStorage.removeItem("username");
-            localStorage.removeItem("favoriteColor");
+            localStorage.removeItem("name");
+            localStorage.removeItem("color");
         }
     });
     $("#common-sign-in .my-col-box").on("click", function () {
@@ -52,7 +52,7 @@ function hideSidebar() {
 }
 
 function checkSignedIn() {
-    if (!userInfo.userNo) {
+    if (!userInfo.userId) {
         openSignInPopup();
         return false;
     }
@@ -62,19 +62,19 @@ function checkSignedIn() {
 function openSignInPopup() {
     $("#common-sign-in").foundation('open');
     $("#form-sign-in .form-error").hide();
-    let username = localStorage.getItem("username");
-    let description = localStorage.getItem("description");
-    let favoriteColor = Number(localStorage.getItem("favoriteColor"));
-    if (username) {
+    let name = localStorage.getItem("name");
+    let aboutMe = localStorage.getItem("aboutMe");
+    let color = Number(localStorage.getItem("color"));
+    if (name) {
         $("#form-sign-in input[name=remember-me]").prop("checked", true);
     }
-    if (favoriteColor < 1 || favoriteColor > 7) {
-        favoriteColor = Math.floor(Math.random() * 7) + 1;
+    if (color < 1 || color > 7) {
+        color = Math.floor(Math.random() * 7) + 1;
     }
     $("#common-sign-in .my-col-box").removeClass("selected");
-    $("#common-sign-in .my-col-" + favoriteColor).addClass("selected");
-    $("#form-sign-in textarea[name=description]").val(description);
-    $("#form-sign-in input[name=username]").val(username).focus();
+    $("#common-sign-in .my-col-" + color).addClass("selected");
+    $("#form-sign-in textarea[name=aboutMe]").val(aboutMe);
+    $("#form-sign-in input[name=name]").val(name).focus();
 }
 
 let startSignInTimer;
@@ -84,37 +84,37 @@ function startSignIn() {
         startSignInTimer = null;
     }
     $("#common-sign-in").foundation('close');
-    let username = $("#form-sign-in input[name=username]").val().trim();
-    let description = $("#form-sign-in textarea[name=description]").val().trim();
-    if (username) {
-        let favoriteColor = $("#common-sign-in .my-col-box.selected").text();
+    let name = $("#form-sign-in input[name=name]").val().trim();
+    let aboutMe = $("#form-sign-in textarea[name=about_me]").val().trim();
+    if (name) {
+        let color = $("#common-sign-in .my-col-box.selected").text();
         if ($("#form-sign-in input[name='remember-me']").prop("checked")) {
-            localStorage.setItem("username", username);
-            localStorage.setItem("description", description);
-            localStorage.setItem("favoriteColor", favoriteColor);
+            localStorage.setItem("name", name);
+            localStorage.setItem("aboutMe", aboutMe);
+            localStorage.setItem("color", color);
         } else {
-            localStorage.removeItem("username");
-            localStorage.removeItem("description");
-            localStorage.removeItem("favoriteColor");
+            localStorage.removeItem("name");
+            localStorage.removeItem("aboutMe");
+            localStorage.removeItem("color");
         }
         openWaitPopup(modalMessages.signingIn, function () {
             location.reload();
         }, 10000);
         startSignInTimer = setTimeout(function () {
-            doSignIn(username, description, favoriteColor);
+            doSignIn(name, aboutMe, color);
         }, 600);
     }
 }
 
-function doSignIn(username, description, favoriteColor) {
+function doSignIn(name, aboutMe, color) {
     $.ajax({
         url: '/sign-in',
         type: 'post',
         dataType: 'json',
         data: {
-            username: username,
-            description: description,
-            favoriteColor: favoriteColor,
+            name: name,
+            aboutMe: aboutMe,
+            color: color,
             timeZone: getTimeZone()
         },
         success: function (result) {
@@ -126,7 +126,7 @@ function doSignIn(username, description, favoriteColor) {
                     closeWaitPopup();
                     openSignInPopup();
                     $("#form-sign-in .form-error.already-in-use").show();
-                    $("#form-sign-in input[name=username]").val(username).focus();
+                    $("#form-sign-in input[name=name]").val(name).focus();
                     break;
                 case "-3":
                     closeWaitPopup();

@@ -72,100 +72,55 @@
 .service .service-options .button.start.en {
     min-width: 16em;
 }
-.service.exchange h4 {
-    color: #3e91b3;
+.service.public h4 {
+    color: #178ec9;
 }
-.service.exchange p.guide {
-    border-left: 2px solid #3e91b3;
+.service.public p.guide {
+    border-left: 2px solid #178ec9;
 }
-.service.exchange a.guide {
-    color: #3e91b3;
+.service.public a.guide {
+    color: #178ec9;
 }
-.service.exchange .service-options .button.start {
-    background-color: #3e91b3;
+.service.public .service-options .button.start {
+    background-color: #178ec9;
 }
-.service.exchange:hover .service-options .button.start {
-    background-color: #2888af;
+.service.public:hover .service-options .button.start {
+    background-color: #279ad4;
 }
-.service.random h4 {
+.service.discovery h4 {
     color: #e76686;
 }
-.service.random p.guide {
+.service.discovery p.guide {
     border-left: 2px solid #d26881;
 }
-.service.random a.guide {
+.service.discovery a.guide {
     color: #d26881;
 }
-.service.random .service-options .button.start {
-    background-color: #de7b91;
-}
-.service.random:hover .service-options .button.start {
+.service.discovery .service-options .button.start {
     background-color: #f16e8d;
 }
+.service.discovery:hover .service-options .button.start {
+    background-color: #f87f9b;
+}
 @media screen and (max-width: 18em) {
-    .service.random p.dummy {
+    .service.discovery p.dummy {
         margin-bottom: 3.6em;
     }
 }
-.service.strangers h4 {
-    color: #ff9319;
-}
-.service.strangers p.guide {
-    border-left: 2px solid #ffa83c;
-}
-.service.strangers a.guide {
-    color: #ffa83c;
-}
-.service.strangers .service-options .button.start {
-    background-color: #ea9f4b;
-}
-.service.strangers:hover .service-options .button.start {
-    background-color: #f8a03d;
-}
-.service.private h4 {
-    color: #5fb440;
-}
-.service.private p.guide {
-    border-left: 2px solid #84d268;
-}
-.service.private a.guide {
-    color: #84d268;
-}
-.service.private .service-options .button.start {
-    background-color: #7fcc64;
-}
-.service.private:hover .service-options .button.start {
-    background-color: #76d554;
-}
-.service.public h4 {
-    color: #1691cf;
-}
-.service.public p.guide {
-    border-left: 2px solid #58aed9;
-}
-.service.public a.guide {
-    color: #58aed9;
-}
-.service.public .service-options .button.start {
-    background-color: #64bce5;
-}
-.service.public:hover .service-options .button.start {
-    background-color: #44bbf5;
-}
-.rooms-options {
+.chats-options {
     font-size: .85em;
     background-color: #ececec;
     border-radius: 8px;
     padding: 0 0 0 1em;
 }
-.rooms-options h6 {
+.chats-options h6 {
     margin: .25em 0;
     line-height: 1.2;
 }
-.rooms-options .refresh-rooms {
+.chats-options .refresh-chats {
     white-space: nowrap;
 }
-.rooms-options .room-lang {
+.chats-options .chat-lang {
     width: auto;
     height: 32px;
     margin: 7px 0 0 0;
@@ -177,38 +132,40 @@
     border-left: 1px solid #fff;
     border-radius: 10px 8px 8px 0;
 }
-.rooms .room {
+.chats .chat {
     position: relative;
     border-radius: 10px;
     border: 1px solid #99ddfc;
     padding: .5em .7em 1.5em;
     color: #888;
 }
-.rooms .room.cell {
+.chats .chat.cell {
     margin-bottom: 0;
 }
-.rooms .room.template {
+.chats .chat.template {
     display: none;
 }
-.rooms .room h5 {
+.chats .chat h5 {
     color: #1691cf;
     margin-right: 1em;
     margin-bottom: .5em;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
-.rooms .room .room-info {
+.chats .chat .chat-info {
     position: absolute;
     left: 0;
     bottom: 0;
     padding: .35em .55em;
     line-height: 1;
 }
-.rooms .room .curr-users {
+.chats .chat .curr-users {
     font-size: 1.1em;
 }
-.rooms .room.active .curr-users {
+.chats .chat.active .curr-users {
     color: #0280be;
 }
-.rooms .room.active .curr-users:before {
+.chats .chat.active .curr-users:before {
     -webkit-animation: in-chatting .8s infinite alternate;
     animation: in-chatting .8s infinite alternate;
 }
@@ -220,11 +177,11 @@
     0% { color: #0280be; }
     100% { color: #92d3f3; }
 }
-.rooms .room .lang {
+.chats .chat .lang {
     padding-left: 1em;
     font-size: .9em;
 }
-.rooms .room .new {
+.chats .chat .new {
     position: absolute;
     right: .1em;
     top: 0;
@@ -233,7 +190,7 @@
     line-height: 1;
     font-size: 1.5em;
 }
-.room .button.start {
+.chat .button.start {
     position: absolute;
     right: 0;
     bottom: 0;
@@ -244,20 +201,20 @@
     border-top: 1px solid #fff;
     border-left: 1px solid #fff;
 }
-.room:hover .button.start {
+.chat:hover .button.start {
     background-color: #bee2f6;
 }
-.no-rooms {
+.no-chats {
     display: none;
 }
-.no-rooms .room {
+.no-chats .chat {
     position: relative;
     border-radius: 10px;
     border: 1px solid #ccc;
     padding: .5em .7em 1.5em;
     color: #888;
 }
-.no-rooms .room .button.start {
+.no-chats .chat .button.start {
     border-radius: 10px 0 9px 0;
     background-color: #ececec;
     color: #21589f;

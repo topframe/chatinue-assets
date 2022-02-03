@@ -1,61 +1,61 @@
-let recentlyCreatedRoomId;
+let recentlyCreatedChatId;
 
 $(function () {
     $(".service a.guide").on("click", function () {
        $(this).parent().find("p.guide").toggleClass("show-for-medium");
     });
-    $(".public-room-create").on("click", function () {
+    $(".public-chat-create").on("click", function () {
         if (!checkSignedIn()) {
             return false;
         }
-        $("#lobby-public-room-create").foundation('open');
-        $("#form-public-room-create .form-error").hide();
-        $("#form-public-room-create").each(function () {
+        $("#lobby-public-chat-create").foundation('open');
+        $("#form-public-chat-create .form-error").hide();
+        $("#form-public-chat-create").each(function () {
             this.reset();
         });
-        $("#form-public-room-create select[name=lang_cd] option").filter(function () {
+        $("#form-public-chat-create select[name=lang_cd] option").filter(function () {
             return $(this).val() === userInfo.language;
         }).each(function () {
-            $("#form-public-room-create select[name=lang_cd]").val(userInfo.language);
+            $("#form-public-chat-create select[name=lang_cd]").val(userInfo.language);
         });
-        $("#form-public-room-create input[name=room_nm]").focus();
+        $("#form-public-chat-create input[name=chat_nm]").focus();
     });
-    $("#form-public-room-create").submit(function () {
-        doCreatePublicRoom();
+    $("#form-public-chat-create").submit(function () {
+        doCreatePublicChat();
         return false;
     });
-    $("button.go-created-public-room").on("click", function () {
-        if (recentlyCreatedRoomId) {
+    $("button.go-created-public-chat").on("click", function () {
+        if (recentlyCreatedChatId) {
             if (chatClient) {
                 chatClient.closeSocket();
             }
-            location.href = "/rooms/" + recentlyCreatedRoomId;
+            location.href = "/chats/" + recentlyCreatedChatId;
         }
     });
-    $(".private-room-create").on("click", function () {
+    $(".private-chat-create").on("click", function () {
         if (!checkSignedIn()) {
             return false;
         }
-        $("#lobby-private-room-create").foundation('open');
-        $("#form-private-room-create").each(function () {
+        $("#lobby-private-chat-create").foundation('open');
+        $("#form-private-private-create").each(function () {
             this.reset();
         });
-        $("#form-private-room-create input[name=room_nm]").focus();
+        $("#form-private-chat-create input[name=chat_nm]").focus();
     });
-    $("#form-private-room-create").submit(function () {
-        doCreatePrivateRoom();
+    $("#form-private-chat-create").submit(function () {
+        doCreatePrivateChat();
         return false;
     });
-    $("button.go-created-private-room").on("click", function () {
-        if (recentlyCreatedRoomId) {
+    $("button.go-created-private-chat").on("click", function () {
+        if (recentlyCreatedChatId) {
             if (chatClient) {
                 chatClient.closeSocket();
             }
-            location.href = "/private/" + recentlyCreatedRoomId;
+            location.href = "/private/" + recentlyCreatedChatId;
         }
     });
-    $("#lobby-private-room-create-complete").on("click", ".copy-to-clipboard", function () {
-        copyToClipboard("#lobby-private-room-create-complete .private-chatroom-url");
+    $("#lobby-private-chat-create-complete").on("click", ".copy-to-clipboard", function () {
+        copyToClipboard("#lobby-private-chat-create-complete .private-chat-url");
         $(this).data("old-text", $(this).text()).text(modalMessages.copied).addClass("secondary");
     });
     $("a.start[href]").on("click", function (event) {
@@ -65,14 +65,14 @@ $(function () {
         }
         location.href = $(this).attr("href");
     });
-    $(".service.random a.start").off().on("click", function (event) {
+    $(".service.discovery a.start").off().on("click", function (event) {
         event.preventDefault();
         if (chatClient) {
             chatClient.closeSocket();
         }
         let convoLang = $(".service-options select[name=convo_lang]").val();
         if (convoLang) {
-            location.href = $(this).attr("href") + "?convo_lang=" + convoLang;
+            location.href = $(this).attr("href") + "?lang=" + convoLang;
         } else {
             location.href = $(this).attr("href");
         }
@@ -92,55 +92,55 @@ $(function () {
             $(".service-options select[name=convo_lang]").val(convoLang);
         });
     }
-    $(".refresh-rooms").on("click", function () {
-        refreshRooms();
+    $(".refresh-chats").on("click", function () {
+        refreshChats();
     });
-    $(".rooms-options select[name=room_lang]").change(function () {
-        refreshRooms();
+    $(".chats-options select[name=chat_lang]").change(function () {
+        refreshChats();
         $(this).blur();
-        sessionStorage.setItem("roomLang", $(this).val());
+        sessionStorage.setItem("chatLang", $(this).val());
     });
-    let roomLang = sessionStorage.getItem("roomLang");
-    if (!roomLang) {
-        roomLang = userInfo.language;
+    let chatLang = sessionStorage.getItem("chatLang");
+    if (!chatLang) {
+        chatLang = userInfo.language;
     }
-    refreshRooms(roomLang, true);
+    refreshChats(chatLang, true);
 });
 
-function doCreatePublicRoom() {
-    $("#form-public-room-create .form-error").hide();
-    let roomName = $("#form-public-room-create input[name=room_nm]").val().trim();
-    let langCode = $("#form-public-room-create select[name=lang_cd]").val().trim();
-    if (!roomName) {
-        $("#form-public-room-create .form-error.room-name-required").show();
-        $("#form-public-room-create input[name=room_nm]").focus();
+function doCreatePublicChat() {
+    $("#form-public-chat-create .form-error").hide();
+    let chatName = $("#form-public-chat-create input[name=chat_nm]").val().trim();
+    let langCode = $("#form-public-chat-create select[name=lang_cd]").val().trim();
+    if (!chatName) {
+        $("#form-public-chat-create .form-error.chat-name-required").show();
+        $("#form-public-chat-create input[name=chat_nm]").focus();
         return;
     }
     $.ajax({
-        url: '/rooms',
+        url: '/chats',
         type: 'post',
         dataType: 'json',
         data: {
-            room_nm: roomName,
+            chat_nm: chatName,
             lang_cd: langCode
         },
         success: function (result) {
-            recentlyCreatedRoomId = null;
+            recentlyCreatedChatId = null;
             switch (result) {
-                case "-2":
-                    $("#form-public-room-create .form-error.already-in-use").show();
-                    $("#form-public-room-create input[name=room_nm]").select().focus();
+                case -2:
+                    $("#form-public-chat-create .form-error.already-in-use").show();
+                    $("#form-public-chat-create input[name=chat_nm]").select().focus();
                     break;
                 default:
-                    if (!result) {
+                    if (result <= 0) {
                         alert("Unexpected error occurred.");
                         location.reload();
                         return;
                     }
-                    $("#form-public-room-create input[name=room_nm]").val("");
-                    recentlyCreatedRoomId = result;
-                    $("#lobby-public-room-create").foundation('close');
-                    $("#lobby-public-room-create-complete").foundation('open');
+                    $("#form-public-chat-create input[name=chat_nm]").val("");
+                    recentlyCreatedChatId = result;
+                    $("#lobby-public-chat-create").foundation('close');
+                    $("#lobby-public-chat-create-complete").foundation('open');
             }
         },
         error: function (request, status, error) {
@@ -149,12 +149,12 @@ function doCreatePublicRoom() {
     });
 }
 
-function doCreatePrivateRoom() {
-    $("#form-private-room-create .form-error").hide();
-    let roomName = $("#form-private-room-create input[name=room_nm]").val().trim();
-    if (!roomName) {
-        $("#form-private-room-create .form-error.room-name-required").show();
-        $("#form-private-room-create input[name=room_nm]").focus();
+function doCreatePrivateChat() {
+    $("#form-private-chat-create .form-error").hide();
+    let chatName = $("#form-private-chat-create input[name=chat_nm]").val().trim();
+    if (!chatName) {
+        $("#form-private-chat-create .form-error.chat-name-required").show();
+        $("#form-private-chat-create input[name=chat_nm]").focus();
         return;
     }
     $.ajax({
@@ -162,10 +162,10 @@ function doCreatePrivateRoom() {
         type: 'post',
         dataType: 'json',
         data: {
-            room_nm: roomName
+            chat_nm: chatName
         },
         success: function (result) {
-            recentlyCreatedRoomId = null;
+            recentlyCreatedChatId = null;
             switch (result) {
                 case "-1":
                     alert("reCAPTCHA verification failed");
@@ -177,16 +177,16 @@ function doCreatePrivateRoom() {
                         location.reload();
                         return;
                     }
-                    recentlyCreatedRoomId = result;
+                    recentlyCreatedChatId = result;
                     let url = "https://chatinue.com/private/" + result;
-                    $("#form-private-room-create input[name=room_nm]").val("");
-                    $("#lobby-private-room-create").foundation('close');
-                    $("#lobby-private-room-create-complete").foundation('open');
-                    let oldText = $("#lobby-private-room-create-complete .copy-to-clipboard").data("old-text");
+                    $("#form-private-chat-create input[name=chat_nm]").val("");
+                    $("#lobby-private-chat-create").foundation('close');
+                    $("#lobby-private-chat-create-complete").foundation('open');
+                    let oldText = $("#lobby-private-chat-create-complete .copy-to-clipboard").data("old-text");
                     if (oldText) {
-                        $("#lobby-private-room-create-complete .copy-to-clipboard").text(oldText).removeClass("alert");
+                        $("#lobby-private-chat-create-complete .copy-to-clipboard").text(oldText).removeClass("alert");
                     }
-                    $("#lobby-private-room-create-complete .private-chatroom-url").text(url);
+                    $("#lobby-private-chat-create-complete .private-chat-url").text(url);
             }
         },
         error: function (request, status, error) {
@@ -195,62 +195,62 @@ function doCreatePrivateRoom() {
     });
 }
 
-let refreshRoomsTimer;
-function refreshRooms(roomLang, recursable) {
-    if (refreshRoomsTimer) {
-        clearTimeout(refreshRoomsTimer);
-        refreshRoomsTimer = null;
+let refreshChatsTimer;
+function refreshChats(chatLang, recursable) {
+    if (refreshChatsTimer) {
+        clearTimeout(refreshChatsTimer);
+        refreshChatsTimer = null;
     }
-    if (roomLang) {
-        $(".rooms-options select[name=room_lang] option").filter(function () {
-            return $(this).val() === roomLang;
+    if (chatLang) {
+        $(".chats-options select[name=chat_lang] option").filter(function () {
+            return $(this).val() === chatLang;
         }).each(function () {
-            $(".rooms-options select[name=room_lang]").val(roomLang);
+            $(".chats-options select[name=chat_lang]").val(chatLang);
         });
     } else {
-        roomLang = $(".rooms-options select[name=room_lang]").val();
+        chatLang = $(".chats-options select[name=chat_lang]").val();
     }
-    refreshRoomsTimer = setTimeout(function () {
+    refreshChatsTimer = setTimeout(function () {
         $.ajax({
-            url: '/lobby/rooms',
+            url: '/lobby/chats',
             data: {
-                lang_cd: roomLang
+                lang_cd: chatLang
             },
             type: 'get',
             dataType: 'json',
             success: function (list) {
                 if (!list || !list.length) {
-                    if (recursable && roomLang !== "en") {
-                        $(".no-rooms .button.start").hide();
+                    if (recursable && chatLang !== "en") {
+                        $(".no-chats .button.start").hide();
                         setTimeout(function () {
-                            sessionStorage.setItem("roomLang", "en");
-                            refreshRooms("en", false);
+                            sessionStorage.setItem("chatLang", "en");
+                            refreshChats("en", false);
                         }, 1500);
                     } else {
-                        $(".no-rooms .button.start").show();
+                        $(".no-chats .button.start").show();
                     }
-                    $(".rooms .room:visible").remove();
-                    $(".rooms").hide();
-                    $(".no-rooms").fadeIn();
+                    $(".chats .chat:visible").remove();
+                    $(".chats").hide();
+                    $(".no-chats").fadeIn();
                     return;
                 }
-                $(".no-rooms").hide();
-                $(".rooms").show();
-                $(".rooms .room:visible").remove();
+                $(".no-chats").hide();
+                $(".chats").show();
+                $(".chats .chat:visible").remove();
                 for (let i in list) {
-                    let roomInfo = list[i];
-                    let room = $(".rooms .room.template").clone().removeClass("template");
-                    room.data("room-id", roomInfo.roomId);
-                    room.find("a").attr("href", "/rooms/" + roomInfo.roomId);
-                    room.find("h5").text(roomInfo.roomName);
-                    room.find(".curr-users span").text(roomInfo.currentUsers);
-                    if (roomInfo.currentUsers > 0) {
-                        room.addClass("active");
+                    let chatInfo = list[i];
+                    let chat = $(".chats .chat.template").clone().removeClass("template");
+                    chat.data("chat-id", chatInfo.chatId);
+                    chat.find("a").attr("href", "/chats/" + chatInfo.chatId);
+                    chat.find("h5").text(chatInfo.chatName);
+                    chat.find(".curr-users span").text(chatInfo.currentUsers);
+                    if (chatInfo.currentUsers > 0) {
+                        chat.addClass("active");
                     }
-                    if (roomInfo.pastDays >= 2) {
-                        room.find(".new").hide();
+                    if (chatInfo.pastDays >= 2) {
+                        chat.find(".new").hide();
                     }
-                    room.appendTo($(".rooms")).hide().fadeIn();
+                    chat.appendTo($(".chats")).hide().fadeIn();
                 }
             },
             error: function () {

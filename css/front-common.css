@@ -4,7 +4,7 @@
     box-sizing: border-box;
 }
 body {
-    background: #314046;
+    background: #495A61;
 }
 .grid-y.grid-frame {
     /*noinspection CssUnresolvedCustomProperty*/
@@ -33,7 +33,7 @@ input#for-automata-clear {
 }
 .header {
     position: relative;
-    background-color: #314046;
+    background-color: #495A61;
     color: #fff;
     padding: 0 10px;
 }
@@ -57,6 +57,7 @@ input#for-automata-clear {
     line-height: 30px;
     height: 30px;
     border: none;
+    background-color: #2a414d;
 }
 .header .button .iconfont {
     font-size: 24px;
@@ -79,15 +80,15 @@ input#for-automata-clear {
 }
 .header .button.sidebar-toggler #totalPeople {
     float: right;
-    margin-left: 2px;
+    margin-left: 5px;
     padding-left: .4em;
     padding-right: .4em;
     text-align: center;
-    min-width: 20px;
+    min-width: 2em;
     font-size: 1em;
     font-weight: bold;
-    background-color: #516169;
-    border-radius: 6px;
+    background-color: #2a414d;
+    border-radius: 30px;
     display: none;
 }
 .header .button.sidebar-toggler:hover #totalPeople {
@@ -186,7 +187,7 @@ input#for-automata-clear {
     width: 40px;
     border-radius: 6px 0 6px 0;
 }
-.user .nameplate .username {
+.user .nameplate .name {
     margin: 0;
     padding: 8px 8px 2px;
     max-width: 100% !important;
@@ -196,7 +197,7 @@ input#for-automata-clear {
     color: #186286;
     font-size: 1em;
 }
-.user .nameplate .description {
+.user .nameplate .aboutMe {
     margin: 0;
     padding: 0 45px 0 8px;
     font-size: .85em;

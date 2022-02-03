@@ -4,7 +4,7 @@ function ChatMonitor(chatClientSettings) {
     let socket;
     let heartbeatTimer;
     let heartbeatCount = 0;
-    let rooms = [];
+    let chats = [];
 
     this.init = function (extender) {
         if (!Modernizr.websockets || detectIE()) {
@@ -27,7 +27,7 @@ function ChatMonitor(chatClientSettings) {
 
     this.openSocket = function (token, params) {
         if (!token) {
-            token = chatClientSettings.admissionToken;
+            token = chatClientSettings.talkerToken;
         }
         if (!token || token.length > 100) {
             chatMonitor.gotoHome();
@@ -49,8 +49,8 @@ function ChatMonitor(chatClientSettings) {
         };
         socket.onmessage = function (event) {
             if (typeof event.data === "string") {
-                let chatMessage = deserialize(event.data);
-                chatMonitor.handleMessage(chatMessage);
+                let message = deserialize(event.data);
+                chatMonitor.handleMessage(message);
             }
         };
         socket.onclose = function (event) {
@@ -142,21 +142,21 @@ function ChatMonitor(chatClientSettings) {
         chatMonitor.gotoHome();
     };
 
-    this.handleMessage = function (chatMessage) {
-        Object.getOwnPropertyNames(chatMessage).forEach(function (val, idx, array) {
-            let payload = chatMessage[val];
+    this.handleMessage = function (message) {
+        Object.getOwnPropertyNames(message).forEach(function (val, idx, array) {
+            let payload = message[val];
             console.log(val, payload);
             if (payload) {
                 switch (val) {
-                    case "heartBeat": {
+                    case "heartbeat": {
                         if (payload === "-pong-") {
                             chatMonitor.heartbeatPing();
                         }
                         break;
                     }
                     default: {
-                        if (payload.content && payload.content.startsWith("usersByCountry:")) {
-                            let usersByCountry = deserialize(payload.content.substring(15));
+                        if (payload.text && payload.text.startsWith("usersByCountry:")) {
+                            let usersByCountry = deserialize(payload.text.substring(15));
                             drawUsersByCountry(usersByCountry);
                         } else {
                             chatMonitor.printMessage(val, payload);
@@ -168,8 +168,8 @@ function ChatMonitor(chatClientSettings) {
         });
     };
 
-    this.sendMessage = function (message) {
-        socket.send(message);
+    this.sendMessage = function (text) {
+        socket.send(text);
     };
 
     this.scrollToBottom = function (container) {
@@ -187,46 +187,46 @@ function ChatMonitor(chatClientSettings) {
     };
 
     this.printMessage = function (type, payload) {
-        let roomId = payload.roomId||"log";
-        let room = chatMonitor.touchRoom(roomId);
-        let convo = room.find(".convo");
+        let chatId = payload.chatId||"log";
+        let chat = chatMonitor.touchChat(chatId);
+        let convo = chat.find(".convo");
         switch (type) {
             case "userJoined":
-                payload.content = "has entered.";
+                payload.text = "has entered.";
                 chatMonitor.makeMessage(payload, true).appendTo(convo);
                 break;
             case "userLeft":
-                payload.content = "has left.";
+                payload.text = "has left.";
                 chatMonitor.makeMessage(payload, true).appendTo(convo);
                 break;
             default:
                 chatMonitor.makeMessage(payload).appendTo(convo);
         }
-        if (room.data("tailing")) {
+        if (chat.data("tailing")) {
             chatMonitor.scrollToBottom(convo);
         }
     };
 
     this.makeMessage = function (payload, isEvent) {
         let message = $("<p class='message'/>");
-        if (payload.chater) {
-            let chater = deserialize(payload.chater);
+        if (payload.talker) {
+            let talker = deserialize(payload.talker);
             let sender = $("<span class='sender'/>")
-                .text(chater.username)
-                .attr("title", chater.description);
-            if (chater.color) {
-                sender.addClass("my-col-" + chater.color);
+                .text(talker.userName)
+                .attr("title", talker.aboutMe);
+            if (talker.color) {
+                sender.addClass("my-col-" + talker.color);
             }
             let content = $("<span class='content'/>")
-                .text(payload.content);
-            message.data("user-no", chater.userNo)
-                .data("username", chater.username)
+                .text(payload.text);
+            message.data("user-id", talker.userId)
+                .data("user-name", talker.userName)
                 .append(sender)
                 .append(content);
-            if (chater.country) {
+            if (talker.country) {
                 let flag = $("<img class='flag'/>");
-                flag.attr("src", "/assets/flags/" + chater.country.toLowerCase() + ".svg");
-                flag.attr("title", countryNames[chater.country]);
+                flag.attr("src", "/assets/flags/" + talker.country.toLowerCase() + ".svg");
+                flag.attr("title", countryNames[talker.country]);
                 message.prepend(flag);
             }
             if (isEvent) {
@@ -234,7 +234,7 @@ function ChatMonitor(chatClientSettings) {
             }
         } else {
             $("<span class='content'/>")
-                .text(payload.content)
+                .text(payload.text)
                 .appendTo(message);
         }
         if (payload.datetime) {
@@ -244,32 +244,32 @@ function ChatMonitor(chatClientSettings) {
         return message;
     };
 
-    this.touchRoom = function (roomId) {
-        if (!rooms[roomId]) {
+    this.touchChat = function (chatId) {
+        if (!chats[chatId]) {
             let monitor = $(".monitor");
-            let room = $(".room").eq(0).hide().clone();
-            room.data("room-id", roomId);
-            room.addClass("available");
-            room.find("h4").text(roomId);
-            room.data("tailing", true);
-            room.find(".tailing-status").addClass("on");
-            if (roomId === "log") {
-                $(".monitor .room").eq(0).after(room);
+            let chat = $(".chat").eq(0).hide().clone();
+            chat.data("chat-id", chatId);
+            chat.addClass("available");
+            chat.find("h4").text(chatId);
+            chat.data("tailing", true);
+            chat.find(".tailing-status").addClass("on");
+            if (chatId === "log") {
+                $(".monitor .chat").eq(0).after(chat);
             } else {
-                room.appendTo(".monitor");
+                chat.appendTo(".monitor");
             }
-            if (monitor.hasClass("tiled") || $(".room:visible").length === 0) {
-                room.show();
+            if (monitor.hasClass("tiled") || $(".chat:visible").length === 0) {
+                chat.show();
             }
             let cellSize = monitor.data("cell-size");
             if (cellSize) {
-                room.addClass(cellSize);
+                chat.addClass(cellSize);
             }
             let tab = $(".tabs-title").eq(0).hide().clone();
-            tab.data("room-id", roomId);
-            tab.find(".title").text(roomId);
+            tab.data("chat-id", chatId);
+            tab.find(".title").text(chatId);
             tab.addClass("available");
-            if (roomId === "log") {
+            if (chatId === "log") {
                 $(".monitor .tabs-title").eq(0).after(tab);
             } else {
                 tab.appendTo(".tabs");
@@ -279,32 +279,32 @@ function ChatMonitor(chatClientSettings) {
                 $(".tabs-title.available").removeClass("is-active").eq(0).addClass("is-active");
             }
             setTimeout(function () {
-                chatMonitor.updateRoomName(roomId, room, tab);
+                chatMonitor.updateChatName(chatId, chat, tab);
             }, 1);
-            rooms[roomId] = room;
-            return room
+            chats[chatId] = chat;
+            return chat
         } else {
-            return rooms[roomId];
+            return chats[chatId];
         }
     };
 
-    this.removeRoom = function (roomId) {
-        let room;
-        $(".room").filter(function () {
-            return $(this).data("room-id") === roomId;
+    this.removeChat = function (chatId) {
+        let chat;
+        $(".chat").filter(function () {
+            return $(this).data("chat-id") === chatId;
         }).each(function () {
-            room = $(this).hide();
+            chat = $(this).hide();
         });
         let tab;
         $(".tabs-title").filter(function () {
-            return $(this).data("room-id") === roomId;
+            return $(this).data("chat-id") === chatId;
         }).each(function () {
             tab = $(this).hide();
         });
         if (!$(".monitor").hasClass("tiled")) {
-            if (room) {
-                if (!room.prev(".room.available").show().length) {
-                    room.next(".room.available").show();
+            if (chat) {
+                if (!chat.prev(".chat.available").show().length) {
+                    chat.next(".chat.available").show();
                 }
             }
             if (tab) {
@@ -313,49 +313,37 @@ function ChatMonitor(chatClientSettings) {
                 }
             }
         }
-        if (room) {
-            room.remove();
+        if (chat) {
+            chat.remove();
         }
         if (tab) {
             tab.remove();
         }
-        rooms[roomId] = null;
+        chats[chatId] = null;
     };
 
-    this.updateRoomName = function (roomId, room, tab) {
-        if (roomId === "log") {
-            let roomName = "Events";
-            room.find("h4").text(roomName);
-            tab.find(".title").text(roomName).attr("title", roomId);
-            return;
-        } else if (roomId.startsWith("str:")) {
-            let roomName = "Stranger Chat (" + roomId + ")";
-            room.find("h4").text(roomName);
-            tab.find(".title").text(roomName).attr("title", roomId);
-            return;
-        } else if (roomId.startsWith("pri:")) {
-            tab.addClass("private");
-        } else if (roomId.indexOf(":") !== -1) {
-            let roomName = "Exchange Chat (" + roomId + ")";
-            room.find("h4").text(roomName);
-            tab.find(".title").text(roomName).attr("title", roomId);
+    this.updateChatName = function (chatId, chat, tab) {
+        if (chatId === "log") {
+            let chatName = "Events";
+            chat.find("h4").text(chatName);
+            tab.find(".title").text(chatName).attr("title", chatId);
             return;
         }
         $.ajax({
-            url: '/admin/monitor/getRoomName',
+            url: '/admin/monitor/getChatName',
             data: {
-                roomId: roomId
+                chatId: chatId
             },
             type: 'get',
             dataType: 'text',
-            success: function (roomName) {
-                if (roomName) {
-                    room.find("h4").text(roomName);
-                    tab.find(".title").text(roomName).attr("title", roomId);
+            success: function (chatName) {
+                if (chatName) {
+                    chat.find("h4").text(chatName);
+                    tab.find(".title").text(chatName).attr("title", chatId);
                 }
             },
             error: function () {
-                alert("Failed to get room name");
+                alert("Failed to get chat name");
             }
         });
     }
@@ -369,29 +357,29 @@ $(function () {
         $(".layout-options li").removeClass("on");
         $(this).parent().addClass("on");
         let monitor = $(".monitor");
-        let rooms = $(".room.available");
+        let chats = $(".chat.available");
         let columns = $(this).parent().data("columns");
         switch (columns) {
             case 1:
                 monitor.addClass("tiled").data("cell-size", "");
-                rooms.removeClass("large-3 large-4 large-6");
+                chats.removeClass("large-3 large-4 large-6");
                 break;
             case 2:
                 monitor.addClass("tiled").data("cell-size", "large-6");
-                rooms.removeClass("large-3 large-4 large-6").addClass("large-6");
+                chats.removeClass("large-3 large-4 large-6").addClass("large-6");
                 break;
             case 3:
                 monitor.addClass("tiled").data("cell-size", "large-4");
-                rooms.removeClass("large-3 large-4 large-6").addClass("large-4");
+                chats.removeClass("large-3 large-4 large-6").addClass("large-4");
                 break;
             default:
                 monitor.removeClass("tiled").data("cell-size", "");
-                rooms.removeClass("large-3 large-4 large-6");
+                chats.removeClass("large-3 large-4 large-6");
                 let tab = $(".tabs-title.available.is-active");
-                let roomId = tab.data("room-id");
-                if (roomId) {
-                    rooms.each(function () {
-                       if ($(this).data("room-id") === roomId) {
+                let chatId = tab.data("chat-id");
+                if (chatId) {
+                    chats.each(function () {
+                       if ($(this).data("chat-id") === chatId) {
                            $(this).show();
                        } else {
                            $(this).hide();
@@ -404,30 +392,30 @@ $(function () {
     $(".tabs").delegate(".tabs-title.available a", "click", function() {
         $(".tabs-title").removeClass("is-active");
         let tab = $(this).closest(".tabs-title");
-        let roomId = tab.data("room-id");
+        let chatId = tab.data("chat-id");
         tab.addClass("is-active");
-        $(".room.available").each(function () {
-            if ($(this).data("room-id") === roomId) {
+        $(".chat.available").each(function () {
+            if ($(this).data("chat-id") === chatId) {
                 $(this).show();
             } else {
                 $(this).hide();
             }
         });
     });
-    $(".monitor").delegate(".room.available .status-bar .remove-room", "click", function() {
-        let room = $(this).closest(".room");
-        let roomId = room.data("room-id");
-        chatMonitor.removeRoom(roomId);
+    $(".monitor").delegate(".chat.available .status-bar .remove-chat", "click", function() {
+        let chat = $(this).closest(".chat");
+        let chatId = chat.data("chat-id");
+        chatMonitor.removeChat(chatId);
     });
-    $(".monitor").delegate(".room.available .status-bar .tailing-switch", "click", function() {
-        let room = $(this).closest(".room");
-        if (room.data("tailing")) {
-            room.data("tailing", false);
+    $(".monitor").delegate(".chat.available .status-bar .tailing-switch", "click", function() {
+        let chat = $(this).closest(".chat");
+        if (chat.data("tailing")) {
+            chat.data("tailing", false);
             $(this).find(".tailing-status").removeClass("on");
         } else {
-            room.data("tailing", true);
+            chat.data("tailing", true);
             $(this).find(".tailing-status").addClass("on");
-            chatMonitor.scrollToBottom(room.find(".convo"));
+            chatMonitor.scrollToBottom(chat.find(".convo"));
         }
     });
 });

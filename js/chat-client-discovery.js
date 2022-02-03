@@ -10,7 +10,7 @@ $(function () {
         return false;
     }
     chatClient = new ChatClientCore(chatClientSettings);
-    if (!chatClient.init(makeRandomChatClient)) {
+    if (!chatClient.init(makeDiscoveryChatClient)) {
         return;
     }
     $("button.leave").off().on("click", function () {
@@ -20,7 +20,7 @@ $(function () {
         }
         chatClient.closeSocket();
         setTimeout(function () {
-            chatClient.leaveRoom();
+            chatClient.leaveChat();
         }, 500);
     });
     $(".message-box button.send").prop("disabled", true).addClass("pause");
@@ -38,24 +38,24 @@ $(function () {
     startLooking();
 });
 
-function makeRandomChatClient(chatClient) {
-    chatClient.printJoinMessage = function (chater, restored) {
+function makeDiscoveryChatClient(chatClient) {
+    chatClient.printJoinMessage = function (talker, restored) {
         chatClient.removeConvoMessages();
         drawLookingBox();
     };
 
     chatClient.printUserJoinedMessage = function (payload, restored) {
         chatClient.removeConvoMessages();
-        let chater = deserialize(payload.chater);
-        let userJoinedMsg = replaceMessageArguments(chatClientMessages.userJoined, "username", chater.username);
+        let talker = deserialize(payload.talker);
+        let userJoinedMsg = replaceMessageArguments(chatClientMessages.userJoined, "name", talker.userName);
         chatClient.printEventMessage(userJoinedMsg, restored);
-        if (chater.description) {
-            let title = replaceMessageArguments(chatClientMessages.selfIntroductionTitle, "username", chater.username);
-            let selfIntro = $("<div class='self-introduction'/>");
-            $("<p class='self-introduction-title'/>").html(title).appendTo(selfIntro);
-            $("<p class='description'/>").text(chater.description).appendTo(selfIntro);
-            if (chater.color) {
-                selfIntro.addClass("my-col-" + chater.color);
+        if (talker.aboutMe) {
+            let title = replaceMessageArguments(chatClientMessages.aboutMeTitle, "name", talker.userName);
+            let selfIntro = $("<div class='about-me'/>");
+            $("<p class='about-me-title'/>").html(title).appendTo(selfIntro);
+            $("<p class='aboutMe'/>").text(talker.aboutMe).appendTo(selfIntro);
+            if (talker.color) {
+                selfIntro.addClass("my-col-" + talker.color);
             }
             chatClient.printCustomMessage(selfIntro);
         }
@@ -67,8 +67,8 @@ function makeRandomChatClient(chatClient) {
     };
 
     chatClient.printUserLeftMessage = function (payload, restored) {
-        let chater = deserialize(payload.chater);
-        let userLeftMsg = replaceMessageArguments(chatClientMessages.userLeft, "username", chater.username);
+        let talker = deserialize(payload.talker);
+        let userLeftMsg = replaceMessageArguments(chatClientMessages.userLeft, "name", talker.userName);
         chatClient.printEventMessage(userLeftMsg, restored);
         $(".message-box button.send").prop("disabled", true).addClass("pause");
         stopLooking();
@@ -76,7 +76,7 @@ function makeRandomChatClient(chatClient) {
 
     chatClient.serviceNotAvailable = function () {
         chatClient.closeSocket();
-        chatClient.clearChaters();
+        chatClient.clearTalkers();
         chatClient.removeConvoMessages();
         openNoticePopup(chatClientMessages.systemError,
             chatClientMessages.serviceNotAvailable,
@@ -94,7 +94,7 @@ function startLooking() {
     tokenIssuanceCanceled = false;
     tokenIssuanceTimer = setTimeout(function () {
         $.ajax({
-            url: "/random/request",
+            url: "/discovery/request",
             method: 'GET',
             dataType: 'json',
             success: function (response) {
@@ -109,7 +109,7 @@ function startLooking() {
                                 break;
                             case 0:
                                 hideSidebar();
-                                chatClient.openSocket(response.token);
+                                chatClient.openSocket(response.talkerToken);
                         }
                     }
                 } else {
@@ -122,7 +122,7 @@ function startLooking() {
         });
     }, 1000);
     hideSidebar();
-    chatClient.clearChaters();
+    chatClient.clearTalkers();
     chatClient.removeConvoMessages();
     drawLookingBox(true);
 }
@@ -133,7 +133,7 @@ function stopLooking(convoClear) {
     }
     hideSidebar();
     chatClient.closeSocket();
-    chatClient.clearChaters();
+    chatClient.clearTalkers();
     if (convoClear) {
         chatClient.removeConvoMessages();
     }

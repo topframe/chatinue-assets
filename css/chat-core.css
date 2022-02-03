@@ -57,7 +57,7 @@
     text-overflow: ellipsis;
     white-space: nowrap !important;
 }
-#contacts .contact .description {
+#contacts .contact .aboutMe {
     margin: 0;
     padding: 0 24px 2px 0;
     color: #455a65;
@@ -65,7 +65,7 @@
     line-height: 1.1;
     display: none;
 }
-#contacts .contact.has-description::after {
+#contacts .contact.has-aboutMe::after {
     content: "";
     position: absolute;
     top: 4px;
@@ -100,7 +100,7 @@
     word-wrap: anywhere;
 }
 #convo .message .content .datetime {
-    font-size: .9em;
+    font-size: .8em;
     color: #555;
     padding-left: .6em;
 }
@@ -145,7 +145,7 @@
 #convo .message.event .content.user-joined {
     text-align: left;
 }
-#convo .message.event .self-introduction {
+#convo .message.event .about-me {
     text-align: left;
     margin: 0 1em .4em;
     padding: .3em .6em;
@@ -154,25 +154,25 @@
     background-color: #d7d7d7;
     border-radius: 8px;
 }
-#convo .message.event .self-introduction.my-col-1 {
+#convo .message.event .about-me.my-col-1 {
     background-color: #fbd2d2;
 }
-#convo .message.event .self-introduction.my-col-2 {
+#convo .message.event .about-me.my-col-2 {
     background-color: #ffe0c5;
 }
-#convo .message.event .self-introduction.my-col-3 {
+#convo .message.event .about-me.my-col-3 {
     background-color: #f6ea9e;
 }
-#convo .message.event .self-introduction.my-col-4 {
+#convo .message.event .about-me.my-col-4 {
     background-color: #c0eabe;
 }
-#convo .message.event .self-introduction.my-col-5 {
+#convo .message.event .about-me.my-col-5 {
     background-color: #c6e6fd;
 }
-#convo .message.event .self-introduction.my-col-6 {
+#convo .message.event .about-me.my-col-6 {
     background-color: #d4d4fc;
 }
-#convo .message.event .self-introduction.my-col-7 {
+#convo .message.event .about-me.my-col-7 {
     background-color: #f4cff3;
 }
 #convo .message.event .content.user-left {
@@ -202,9 +202,9 @@
     background-color: #72baec8a;
     border-radius: 0 20px 20px;
 }
-#convo .message.received .username {
+#convo .message.received .name {
     float: left;
-    font-weight: bold;
+    font-size: .9em;
 }
 #convo .message.sent .content {
     clear: both;
@@ -212,11 +212,11 @@
     background-color: #fbe2ae;
     border-radius: 20px 0 20px 20px;
 }
-#convo .message.sent .username {
+#convo .message.sent .name {
     float: right;
-    font-weight: bold;
+    font-size: .9em;
 }
-#convo .message.coupled .username {
+#convo .message.coupled .name {
     display: none;
 }
 #convo .message.restored .content {

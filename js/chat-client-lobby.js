@@ -2,7 +2,7 @@ let chatClient;
 let broadcastEnabled = false;
 
 $(function () {
-    if (!userInfo.userNo) {
+    if (!userInfo.userId) {
         return;
     }
     if (!Modernizr.websockets || detectIE()) {
@@ -32,32 +32,25 @@ $(function () {
 
 function makeLobbyChatClient(chatClient) {
     chatClient.printMessage = function (payload, restored) {
-        if (payload.content.startsWith("broadcast:")) {
-            if (broadcastEnabled) {
-                chatClient.printBroadcastMessage(payload);
-            }
-        } else {
-            chatClient.handleSystemMessage(payload.content);
+        if (restored) {
+            return;
         }
-    };
-
-    chatClient.printBroadcastMessage = function (payload) {
-        let chater = deserialize(payload.chater);
+        let talker = deserialize(payload.talker);
         let convo = $("#convo");
         if (convo.find(".message").length >= 5) {
             convo.find(".message").first().remove();
         }
-        let sender = $("<code class='sender'/>").text(chater.username);
+        let sender = $("<code class='sender'/>").text(talker.userName);
         let content = $("<p class='content'/>")
-            .text(payload.content.substring(10))
+            .text(payload.text)
             .prepend(sender);
         let message = $("<div/>")
             .addClass("message")
-            .data("user-no", chater.userNo)
-            .data("username", chater.username)
+            .data("user-id", talker.userId)
+            .data("user-name", talker.userName)
             .append(content);
-        if (chater.color) {
-            message.addClass("my-col-" + chater.color);
+        if (talker.color) {
+            message.addClass("my-col-" + talker.color);
         }
         convo.append(message);
         chatClient.scrollToBottom(convo, false);
@@ -66,46 +59,54 @@ function makeLobbyChatClient(chatClient) {
         }, 10000);
     };
 
-    chatClient.handleSystemMessage = function (content) {
-        if (!content) {
-            return;
-        }
-        if (content.startsWith("usersByCountry:")) {
-            let usersByCountry = deserialize(content.substring(15));
-            drawUsersByCountry(usersByCountry);
-        } else if (content.startsWith("newPublicRoom:")) {
-            let roomInfo = deserialize(content.substring(14));
-            let currentRoomLang = $(".rooms-options select[name=room_lang]").val();
-            if (roomInfo.language === currentRoomLang) {
-                let roomCreatedMsg = replaceMessageArguments(chatClientMessages.roomCreated, "roomName", roomInfo.roomName);
-                chatClient.printEventMessage(roomCreatedMsg);
-                refreshRooms(roomInfo.language);
+    chatClient.printNotice = function (payload) {
+        switch (payload.type) {
+            case "usersByCountry": {
+                let usersByCountry = deserialize(payload.text);
+                drawUsersByCountry(usersByCountry);
+                break;
             }
-        } else if (content.startsWith("updatedPublicRoom:")) {
-            let roomInfo = deserialize(content.substring(18));
-            let currentRoomLang = $(".rooms-options select[name=room_lang]").val();
-            if (roomInfo.language === currentRoomLang) {
-                $(".rooms .room").filter(function () {
-                    return $(this).data("room-id") === roomInfo.roomId;
-                }).each(function () {
-                    let room = $(this);
-                    room.find(".curr-users span").text(roomInfo.currentUsers);
-                    if (roomInfo.currentUsers > 0) {
-                        room.addClass("active");
-                    } else {
-                        room.removeClass("active");
-                    }
-                });
+            case "chatCreated": {
+                let chatInfo = deserialize(payload.text);
+                let currentChatLang = $(".chats-options select[name=chat_lang]").val();
+                if (chatInfo.language === currentChatLang) {
+                    let chatCreatedMsg = replaceMessageArguments(
+                        chatClientMessages.chatCreated, "chatName", chatInfo.name);
+                    chatClient.printEventMessage(chatCreatedMsg);
+                    refreshChats(chatInfo.language);
+                }
+                break;
+            }
+            case "chatUpdated": {
+                let chatInfo = deserialize(payload.text);
+                let currentChatLang = $(".chats-options select[name=chat_lang]").val();
+                if (chatInfo.language === currentChatLang) {
+                    $(".chats .chat").filter(function () {
+                        return $(this).data("chat-id") === chatInfo.chatId;
+                    }).each(function () {
+                        let chat = $(this);
+                        chat.find(".curr-users span").text(chatInfo.currentUsers);
+                        if (chatInfo.currentUsers > 0) {
+                            chat.addClass("active");
+                        } else {
+                            chat.removeClass("active");
+                        }
+                    });
+                }
+                break;
             }
         }
     };
 
-    chatClient.printJoinMessage = function (chater, restored) {
+    chatClient.printJoinMessage = function (talker, restored) {
     };
 
     chatClient.printUserJoinedMessage = function (payload, restored) {
-        let chater = deserialize(payload.chater);
-        let userJoinedMsg = replaceMessageArguments(chatClientMessages.userJoined, "username", chater.username);
+        if (restored) {
+            return;
+        }
+        let talker = deserialize(payload.talker);
+        let userJoinedMsg = replaceMessageArguments(chatClientMessages.userJoined, "name", talker.userName);
         chatClient.printEventMessage(userJoinedMsg);
     };
 
@@ -126,7 +127,7 @@ function makeLobbyChatClient(chatClient) {
         }, timeout || 3500);
     };
 
-    chatClient.leaveRoom = function (force) {
+    chatClient.leaveChat = function (force) {
         chatClient.closeSocket();
         if (force) {
             location.href = "/sign-out";
@@ -136,6 +137,6 @@ function makeLobbyChatClient(chatClient) {
     };
 
     chatClient.gotoHome = function () {
-        chatClient.leaveRoom(true);
+        chatClient.leaveChat(true);
     };
 }
