@@ -124,14 +124,16 @@ function ChatClientCore(chatClientSettings) {
         }
         heartbeatTimer = setTimeout(function () {
             if (socket) {
+                console.log('Sending heartbeat ping');
                 let chatMessage = {
-                    heartbeat: "-ping-"
+                    heartbeat: "ping"
                 };
                 chatClient.sendMessage(serialize(chatMessage));
                 chatClient.heartbeatPing();
                 if (chatClientSettings.pingPerHeartbeats) {
                     heartbeatCount++;
                     if (heartbeatCount % chatClientSettings.pingPerHeartbeats === 0) {
+                        console.log('Sending deep heartbeat ping');
                         $.ajax({
                             url: '/ping',
                             type: 'get',
@@ -202,12 +204,12 @@ function ChatClientCore(chatClientSettings) {
         Object.entries(chatMessage).forEach(([messageType, payload]) => {
             if (payload) {
                 switch (messageType) {
-                    case "heartbeat": {
-                        if (payload === "-pong-") {
-                            chatClient.heartbeatPing();
-                        }
-                        break;
-                    }
+                    // case "heartbeat": {
+                    //     if (payload === "pong") {
+                    //         chatClient.heartbeatPing();
+                    //     }
+                    //     break;
+                    // }
                     case "broadcast": {
                         chatClient.printMessage(payload);
                         break;

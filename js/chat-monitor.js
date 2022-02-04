@@ -74,11 +74,13 @@ function ChatMonitor(chatClientSettings) {
         }
         heartbeatTimer = setTimeout(function () {
             if (socket) {
-                chatMonitor.sendMessage("-ping-");
+                console.log('Sending heartbeat ping');
+                chatMonitor.sendMessage("ping");
                 chatMonitor.heartbeatPing();
                 if (chatClientSettings.pingPerHeartbeats) {
                     heartbeatCount++;
                     if (heartbeatCount % chatClientSettings.pingPerHeartbeats === 0) {
+                        console.log('Sending deep heartbeat ping');
                         $.ajax({
                             url: '/admin/ping',
                             type: 'get',
@@ -147,22 +149,11 @@ function ChatMonitor(chatClientSettings) {
             let payload = message[val];
             console.log(val, payload);
             if (payload) {
-                switch (val) {
-                    case "heartbeat": {
-                        if (payload === "-pong-") {
-                            chatMonitor.heartbeatPing();
-                        }
-                        break;
-                    }
-                    default: {
-                        if (payload.text && payload.text.startsWith("usersByCountry:")) {
-                            let usersByCountry = deserialize(payload.text.substring(15));
-                            drawUsersByCountry(usersByCountry);
-                        } else {
-                            chatMonitor.printMessage(val, payload);
-                        }
-                        break;
-                    }
+                if (payload.text && payload.text.startsWith("usersByCountry:")) {
+                    let usersByCountry = deserialize(payload.text.substring(15));
+                    drawUsersByCountry(usersByCountry);
+                } else {
+                    chatMonitor.printMessage(val, payload);
                 }
             }
         });
