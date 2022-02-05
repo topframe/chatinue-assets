@@ -149,11 +149,22 @@ function ChatMonitor(chatClientSettings) {
             let payload = message[val];
             console.log(val, payload);
             if (payload) {
-                if (payload.text && payload.text.startsWith("usersByCountry:")) {
-                    let usersByCountry = deserialize(payload.text.substring(15));
-                    drawUsersByCountry(usersByCountry);
-                } else {
-                    chatMonitor.printMessage(val, payload);
+                switch (val) {
+                    case "heartbeat": {
+                        if (payload === "pong") {
+                            chatMonitor.heartbeatPing();
+                        }
+                        break;
+                    }
+                    default: {
+                        if (payload.text && payload.text.startsWith("usersByCountry:")) {
+                            let usersByCountry = deserialize(payload.text.substring(15));
+                            drawUsersByCountry(usersByCountry);
+                        } else {
+                            chatMonitor.printMessage(val, payload);
+                        }
+                        break;
+                    }
                 }
             }
         });

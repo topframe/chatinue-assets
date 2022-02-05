@@ -204,12 +204,12 @@ function ChatClientCore(chatClientSettings) {
         Object.entries(chatMessage).forEach(([messageType, payload]) => {
             if (payload) {
                 switch (messageType) {
-                    // case "heartbeat": {
-                    //     if (payload === "pong") {
-                    //         chatClient.heartbeatPing();
-                    //     }
-                    //     break;
-                    // }
+                    case "heartbeat": {
+                        if (payload === "pong") {
+                            chatClient.heartbeatPing();
+                        }
+                        break;
+                    }
                     case "broadcast": {
                         chatClient.printMessage(payload);
                         break;
