@@ -196,12 +196,12 @@ function ChatClientCore(chatClientSettings) {
         chatClient.gotoHome();
     };
 
-    this.handleMessage = function (chatMessage) {
+    this.handleMessage = function (incomingMessage) {
         if (pendedMessages) {
-            pendedMessages.push(chatMessage);
+            pendedMessages.push(incomingMessage);
             return;
         }
-        Object.entries(chatMessage).forEach(([messageType, payload]) => {
+        Object.entries(incomingMessage).forEach(([messageType, payload]) => {
             if (payload) {
                 switch (messageType) {
                     case "heartbeat": {
@@ -231,10 +231,11 @@ function ChatClientCore(chatClientSettings) {
                     case "join": {
                         pendedMessages = [];
                         chatClient.setTalkers(payload.talkers);
-                        if (payload.recentConvo) {
-                            chatClient.printRecentConvo(payload.recentConvo);
-                        }
                         let talker = deserialize(payload.talker);
+                        chatClient.addTalker(talker);
+                        if (payload.convo) {
+                            chatClient.printRecentConvo(payload.convo.reverse());
+                        }
                         chatClient.printJoinMessage(talker);
                         while (pendedMessages && pendedMessages.length > 0) {
                             chatClient.handleMessage(pendedMessages.pop());
@@ -276,10 +277,10 @@ function ChatClientCore(chatClientSettings) {
         if (talkers) {
             console.log("talkers", talkers);
             for (let i in talkers) {
-                let str = talkers[i];
-                console.log("addTalker", str);
-                console.log(deserialize(str));
-                chatClient.addTalker(deserialize(str));
+                let text = talkers[i];
+                console.log("addTalker", text);
+                console.log(deserialize(text));
+                chatClient.addTalker(deserialize(text));
             }
             chatClient.updateTotalPeople();
         }
@@ -305,7 +306,8 @@ function ChatClientCore(chatClientSettings) {
         contact.appendTo($("#contacts"));
         if (talker.country) {
             let flag = $("<img class='flag'/>");
-            flag.attr("src", chatClientSettings.cdnAssetsUrl + "/flags/" + talker.country.toLowerCase() + ".svg");
+            flag.attr("src", chatClientSettings.cdnAssetsUrl +
+                "/flags/" + talker.country.toLowerCase() + ".svg");
             flag.attr("title", talker.country);
             contact.append(flag);
         }
@@ -354,7 +356,8 @@ function ChatClientCore(chatClientSettings) {
     };
 
     this.printJoinMessage = function (talker, restored) {
-        let welcomeMsg = replaceMessageArguments(chatClientMessages.welcome, "name", talker.userName);
+        let welcomeMsg = replaceMessageArguments(chatClientMessages.welcome,
+            "name", talker.userName);
         chatClient.printEventMessage(welcomeMsg, restored);
     };
 
@@ -380,10 +383,12 @@ function ChatClientCore(chatClientSettings) {
         let content = $("<p class='content'/>").addClass(event).data("event", event);
         switch (event) {
             case "user-joined":
-                content.append(replaceMessageArguments(chatClientMessages.userJoined, "name", talker.userName));
+                content.append(replaceMessageArguments(chatClientMessages.userJoined,
+                    "name", talker.userName));
                 break;
             case "user-left":
-                content.append(replaceMessageArguments(chatClientMessages.userLeft, "name", talker.userName));
+                content.append(replaceMessageArguments(chatClientMessages.userLeft,
+                    "name", talker.userName));
                 break;
             default:
                 console.error("Unknown user event: " + event);
@@ -411,7 +416,8 @@ function ChatClientCore(chatClientSettings) {
                 if (more.length > 0) {
                     more.attr("title", contents.length)
                 } else {
-                    $("<i class='more fi-indent-more'></i>").attr("title", contents.length).insertAfter(first);
+                    $("<i class='more fi-indent-more'></i>")
+                        .attr("title", contents.length).insertAfter(first);
                 }
             }
         } else {
@@ -435,12 +441,20 @@ function ChatClientCore(chatClientSettings) {
     this.printMessage = function (payload, restored) {
         let talker = deserialize(payload.talker);
         let convo = $("#convo");
-        let content = $("<p class='content'/>").text(payload.text);
+        let content = $("<p class='content'/>");
+        if (payload.file) {
+            content.append("<i class='iconfont fi-photo not-supported' title='Sorry. Photos are only visible on the mobile app.'></i>");
+            if (payload.text) {
+                content.append($("<span/>").text(payload.text));
+            }
+        } else {
+            content.text(payload.text);
+        }
         if (payload.datetime) {
             let datetime = moment.utc(payload.datetime).local();
             let hours = moment.duration(moment().diff(datetime)).asHours();
-            content.append("<span class='datetime'>" +
-                datetime.format(hours < 24 ? "LTS" : "L LT") + "</span>");
+            content.append($("<span class='datetime'/>")
+                .text(datetime.format(hours < 24 ? "LTS" : "L LT")));
         }
         let last = convo.find(".message").last();
         if (last.length && !last.hasClass("event") && last.data("user-id") === talker.userId) {
@@ -490,9 +504,9 @@ function ChatClientCore(chatClientSettings) {
         chatClient.scrollToBottom(convo);
     };
 
-    this.printRecentConvo = function (chatMessages) {
-        for (let chatMessage of chatMessages) {
-            Object.entries(chatMessage).forEach(([messageType, payload]) => {
+    this.printRecentConvo = function (incomingMessages) {
+        for (let incomingMessage of incomingMessages) {
+            Object.entries(incomingMessage).forEach(([messageType, payload]) => {
                 if (payload) {
                     switch (messageType) {
                         case "broadcast": {
@@ -541,7 +555,8 @@ function ChatClientCore(chatClientSettings) {
     };
 
     this.serviceNotAvailable = function () {
-        openNoticePopup(chatClientMessages.systemError,
+        openNoticePopup(
+            chatClientMessages.systemError,
             chatClientMessages.serviceNotAvailable,
             function () {
                 chatClient.gotoHome();

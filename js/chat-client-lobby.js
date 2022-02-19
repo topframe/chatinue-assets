@@ -32,7 +32,7 @@ $(function () {
 
 function makeLobbyChatClient(chatClient) {
     chatClient.printMessage = function (payload, restored) {
-        if (restored) {
+        if (restored || !payload.text) {
             return;
         }
         let talker = deserialize(payload.talker);
@@ -71,7 +71,7 @@ function makeLobbyChatClient(chatClient) {
                 let currentChatLang = $(".chats-options select[name=chat_lang]").val();
                 if (chatInfo.language === currentChatLang) {
                     let chatCreatedMsg = replaceMessageArguments(
-                        chatClientMessages.chatCreated, "chatName", chatInfo.name);
+                        chatClientMessages.chatCreated, "chatName", chatInfo.chatName);
                     chatClient.printEventMessage(chatCreatedMsg);
                     refreshChats(chatInfo.language);
                 }

@@ -6,7 +6,7 @@
 #contacts .contact {
     position: relative;
     margin: 4px;
-    padding: .3em .6em .3em 2.2em;
+    padding: .4em .6em .4em 2.2em;
     font-size: .95em;
     color: #186286;
     background-color: #99d9fc;
@@ -18,7 +18,7 @@
 }
 #contacts .contact .status {
     position: absolute;
-    left: .3em;
+    left: .4em;
     top: .35em;
     width: 2em;
     padding: .2em .64em;
@@ -61,7 +61,7 @@
     margin: 0;
     padding: 0 24px 2px 0;
     color: #455a65;
-    font-size: .9em;
+    font-size: .8em;
     line-height: 1.1;
     display: none;
 }
@@ -98,6 +98,11 @@
     line-height: 1.2;
     font-size: .97em;
     word-wrap: anywhere;
+}
+#convo .message .content .iconfont.not-supported {
+    font-size: 5em;
+    margin-right: 10px;
+    color: #eee;
 }
 #convo .message .content .datetime {
     font-size: .8em;
