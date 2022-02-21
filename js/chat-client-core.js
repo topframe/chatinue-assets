@@ -440,21 +440,29 @@ function ChatClientCore(chatClientSettings) {
 
     this.printMessage = function (payload, restored) {
         let talker = deserialize(payload.talker);
+        let mine = (userInfo.userId === talker.userId);
         let convo = $("#convo");
         let content = $("<p class='content'/>");
+        let balloon = $("<span class='balloon'/>");
         if (payload.file) {
-            content.append("<i class='iconfont fi-photo not-supported' title='Sorry. Photos are only visible on the mobile app.'></i>");
+            balloon.append("<i class='iconfont fi-photo not-supported' title='Sorry. Photos are only visible on the mobile app.'></i>");
             if (payload.text) {
-                content.append($("<span/>").text(payload.text));
+                balloon.append($("<span/>").text(payload.text));
             }
         } else {
-            content.text(payload.text);
+            balloon.text(payload.text);
         }
+        content.append(balloon);
         if (payload.datetime) {
             let datetime = moment.utc(payload.datetime).local();
             let hours = moment.duration(moment().diff(datetime)).asHours();
-            content.append($("<span class='datetime'/>")
-                .text(datetime.format(hours < 24 ? "LTS" : "L LT")));
+            let $datetime = $("<span class='datetime'/>")
+                .text(datetime.format(hours < 24 ? "LTS" : "L LT"));
+            if (mine) {
+                content.append($datetime);
+            } else {
+                content.append($datetime);
+            }
         }
         let last = convo.find(".message").last();
         if (last.length && !last.hasClass("event") && last.data("user-id") === talker.userId) {
@@ -463,10 +471,9 @@ function ChatClientCore(chatClientSettings) {
             }
             last.append(content);
         } else {
-            let myself = (userInfo.userId === talker.userId);
             let sender = $("<span class='name'/>").text(talker.userName);
             let message = $("<div/>")
-                .addClass(myself ? "message sent" : "message received")
+                .addClass(mine ? "message sent" : "message received")
                 .data("user-id", talker.userId)
                 .data("user-name", talker.userName)
                 .append(sender).append(content);

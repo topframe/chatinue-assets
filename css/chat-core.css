@@ -85,34 +85,66 @@
     height: 100%;
     overflow-y: auto;
     padding-top: 15px;
+    padding-bottom: 5px;
 }
 #convo .message {
-    margin-top: 4px;
-    margin-bottom: 5px;
+    clear: both;
+    margin: 4px 0;
     overflow: auto;
 }
 #convo .message .content {
+    clear: both;
+    margin: 4px 0;
+    overflow: auto;
+}
+#convo .message.received .content {
+    text-align: left;
+}
+#convo .message.sent .content {
+    text-align: right;
+}
+#convo .message .name {
+    font-size: .9em;
+}
+#convo .message.received .name {
+    float: left;
+}
+#convo .message.sent .name {
+    float: right;
+}
+#convo .message.coupled .name {
+    display: none;
+}
+#convo .message .content .balloon {
     border-radius: 1em;
     padding: .4em .9em;
     margin: 0 0 2px;
     line-height: 1.2;
-    font-size: .97em;
+    font-size: 1em;
     word-wrap: anywhere;
 }
-#convo .message .content .iconfont.not-supported {
+#convo .message.received .content .balloon {
+    float: left;
+    text-align: left;
+    background-color: #72baec;
+    border-radius: 0 20px 20px;
+}
+#convo .message.sent .content .balloon {
+    float: right;
+    text-align: left;
+    background-color: #fbe2ae;
+    border-radius: 20px 0 20px 20px;
+}
+#convo .message .content .balloon .iconfont.not-supported {
     font-size: 5em;
     margin-right: 10px;
     color: #eee;
 }
 #convo .message .content .datetime {
+    display: inline-block;
+    margin: 0 .6em;
+    color: #777;
     font-size: .7em;
-    margin-left: .6em;
-    padding: 0.3em;
-    border-radius: 5px;
-    color: #222;
-    background-color: #fff;
-    vertical-align: middle;
-    opacity: 0.5;
 }
 #convo .message.event {
     position: relative;
@@ -129,8 +161,12 @@
     width: 100%;
     color: #333;
     text-align: center;
-    font-size: .94em;
-    padding: .35em 1em .35em 1.2em;
+    font-size: .9em;
+    padding: 0 1em 0 1.2em;
+}
+#convo .message.event .content .datetime {
+    vertical-align: baseline;
+    padding-left: 1em;
 }
 #convo .message.event.group {
     border-radius: 8px;
@@ -146,7 +182,6 @@
 #convo .message.event.group .content.omitted {
     display: none;
     font-size: .88em;
-    padding: .2em 0 .2em 2em;
     color: #555;
 }
 #convo .message.event.group .content.omitted:hover {
@@ -188,69 +223,40 @@
 #convo .message.event .content.user-left {
     text-align: left;
 }
-#convo .message.event .content .datetime {
-    padding-left: 1em;
-}
 #convo .message.event.group .more {
     position: absolute;
-    top: .29em;
+    top: .2em;
     left: 0;
     line-height: 1;
-    font-size: 1.2em;
+    font-size: 1.16em;
     color: #ff5900;
     cursor: pointer;
 }
 #convo .message.event .content strong {
     font-weight: bold;
 }
-#convo .message.received {
-    left: 0;
-}
-#convo .message.received .content {
-    clear: both;
-    float: left;
-    background-color: #72baec8a;
-    border-radius: 0 20px 20px;
-}
-#convo .message.received .name {
-    float: left;
-    font-size: .9em;
-}
-#convo .message.sent .content {
-    clear: both;
-    float: right;
-    background-color: #fbe2ae;
-    border-radius: 20px 0 20px 20px;
-}
-#convo .message.sent .name {
-    float: right;
-    font-size: .9em;
-}
-#convo .message.coupled .name {
-    display: none;
-}
-#convo .message.restored .content {
+#convo .message.restored .content .balloon {
     background-color: #ccc !important;
 }
-#convo .message.my-col-1 .content {
+#convo .message.my-col-1 .content .balloon {
     background-color: #fbd2d2;
 }
-#convo .message.my-col-2 .content {
+#convo .message.my-col-2 .content .balloon {
     background-color: #ffe0c5;
 }
-#convo .message.my-col-3 .content {
+#convo .message.my-col-3 .content .balloon {
     background-color: #f6ea9e;
 }
-#convo .message.my-col-4 .content {
+#convo .message.my-col-4 .content .balloon {
     background-color: #c0eabe;
 }
-#convo .message.my-col-5 .content {
+#convo .message.my-col-5 .content .balloon {
     background-color: #c6e6fd;
 }
-#convo .message.my-col-6 .content {
+#convo .message.my-col-6 .content .balloon {
     background-color: #d4d4fc;
 }
-#convo .message.my-col-7 .content {
+#convo .message.my-col-7 .content .balloon {
     background-color: #f4cff3;
 }
 .message-box .input-group {

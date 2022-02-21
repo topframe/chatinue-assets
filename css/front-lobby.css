@@ -60,7 +60,7 @@
 }
 .service .service-options .button.start {
     margin: 0;
-    border-radius: 15px 0 9px 0;
+    border-radius: 12px 0 9px 0;
     border-top: 1px solid #fff;
     border-left: 1px solid #fff;
     min-width: 12em;
@@ -68,9 +68,6 @@
     color: #fff;
     font-size: .8em;
     font-weight: bold;
-}
-.service .service-options .button.start.en {
-    min-width: 16em;
 }
 .service.public h4 {
     color: #178ec9;
@@ -148,7 +145,7 @@
 .chats .chat h5 {
     color: #1691cf;
     margin-right: 1em;
-    margin-bottom: .5em;
+    margin-bottom: .3em;
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -195,11 +192,11 @@
     right: 0;
     bottom: 0;
     margin: 0;
-    border-radius: 10px 0 7px 0;
+    border-radius: 7px 0 7px 0;
     background-color: #b1e1f9;
-    color: #21589f;
-    border-top: 1px solid #fff;
-    border-left: 1px solid #fff;
+    color: #178ec9;
+    padding: .2em 1em;
+    font-size: 1em;
 }
 .chat:hover .button.start {
     background-color: #bee2f6;
