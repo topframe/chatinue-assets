@@ -137,7 +137,7 @@ function doCreatePublicChat() {
                         location.reload();
                         return;
                     }
-                    $("#form-public-chat-create input[name=chat_nm]").val("");
+                    $("#form-public-chat-create input[name=chat_nm]").val('');
                     recentlyCreatedChatId = result;
                     $("#lobby-public-chat-create").foundation('close');
                     $("#lobby-public-chat-create-complete").foundation('open');
