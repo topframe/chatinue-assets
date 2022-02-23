@@ -215,7 +215,7 @@ function ChatClientCore(chatClientSettings) {
                         break;
                     }
                     case "notice": {
-                        chatClient.printNotice(payload);
+                        chatClient.handelNotice(payload);
                         break;
                     }
                     case "userJoined": {
@@ -246,6 +246,20 @@ function ChatClientCore(chatClientSettings) {
                 }
             }
         });
+    };
+
+    this.handelNotice = function (payload) {
+        console.log(payload);
+        switch (payload.type) {
+            case "messageDeleted": {
+                let msgId = payload.text;
+                let balloon = $("#convo #msg-" + msgId);
+                let icon = $("<i class='iconfont fi-trash not-supported'></i>")
+                    .attr("title", "This message has been deleted.");
+                balloon.empty().append(icon);
+                break;
+            }
+        }
     };
 
     this.readyToType = function (select) {
@@ -443,9 +457,11 @@ function ChatClientCore(chatClientSettings) {
         let mine = (userInfo.userId === talker.userId);
         let convo = $("#convo");
         let content = $("<p class='content'/>");
-        let balloon = $("<span class='balloon'/>");
+        let balloon = $("<span class='balloon' id='msg-" + payload.id + "'/>");
         if (payload.file) {
-            balloon.append("<i class='iconfont fi-photo not-supported' title='Sorry. Photos are only visible on the mobile app.'></i>");
+            $("<i class='iconfont fi-photo not-supported'></i>")
+                .attr("title", "Sorry. Photos are only visible on the mobile app.")
+                .appendTo(balloon);
             if (payload.text) {
                 balloon.append($("<span/>").text(payload.text));
             }
@@ -472,8 +488,8 @@ function ChatClientCore(chatClientSettings) {
             last.append(content);
         } else {
             let sender = $("<span class='name'/>").text(talker.userName);
-            let message = $("<div/>")
-                .addClass(mine ? "message sent" : "message received")
+            let message = $("<div class='message'/>")
+                .addClass(mine ? "sent" : "received")
                 .data("user-id", talker.userId)
                 .data("user-name", talker.userName)
                 .append(sender).append(content);
@@ -487,9 +503,6 @@ function ChatClientCore(chatClientSettings) {
         if (!restored) {
             chatClient.scrollToBottom(convo);
         }
-    };
-
-    this.printNotice = function (payload) {
     };
 
     this.printEventMessage = function (html, restored) {

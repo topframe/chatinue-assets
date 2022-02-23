@@ -20,7 +20,7 @@
 #convo .message .content {
     float: none;
     margin: 0;
-    padding: 2px 4px;
+    padding: 2px 15px;
     border-radius: 0;
     background-color: #f6e6ad !important;
     border: 0;

@@ -59,7 +59,7 @@ function makeLobbyChatClient(chatClient) {
         }, 10000);
     };
 
-    chatClient.printNotice = function (payload) {
+    chatClient.handelNotice = function (payload) {
         switch (payload.type) {
             case "usersByCountry": {
                 let usersByCountry = deserialize(payload.text);
@@ -102,12 +102,12 @@ function makeLobbyChatClient(chatClient) {
     };
 
     chatClient.printUserJoinedMessage = function (payload, restored) {
-        if (restored) {
-            return;
-        }
-        let talker = deserialize(payload.talker);
-        let userJoinedMsg = replaceMessageArguments(chatClientMessages.userJoined, "name", talker.userName);
-        chatClient.printEventMessage(userJoinedMsg);
+        // if (restored) {
+        //     return;
+        // }
+        // let talker = deserialize(payload.talker);
+        // let userJoinedMsg = replaceMessageArguments(chatClientMessages.userJoined, "name", talker.userName);
+        // chatClient.printEventMessage(userJoinedMsg);
     };
 
     chatClient.printUserLeftMessage = function (payload, restored) {
@@ -119,7 +119,7 @@ function makeLobbyChatClient(chatClient) {
         }
         let convo = $("#convo");
         let content = $("<p class='content'/>").html(html);
-        let message = $("<div/>").addClass("message").append(content);
+        let message = $("<div class='message'/>").append(content);
         message.appendTo(convo);
         chatClient.scrollToBottom(convo, false);
         setTimeout(function () {
