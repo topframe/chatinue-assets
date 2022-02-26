@@ -1,6 +1,12 @@
 $(function () {
     $(document).foundation();
 
+    $(".header .button.back").on("click", function (e) {
+        if (appNavigation) {
+            appNavigation.postMessage("back");
+            e.preventDefault();
+        }
+    });
     $(".header button.sidebar-toggler").on("click", function () {
         $(this).blur();
         toggleSidebar();
