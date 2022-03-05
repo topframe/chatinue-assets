@@ -85,8 +85,8 @@ function makeLobbyChatClient(chatClient) {
                         return $(this).data("chat-id") === chatInfo.chatId;
                     }).each(function () {
                         let chat = $(this);
-                        chat.find(".curr-users span").text(chatInfo.currentUsers);
-                        if (chatInfo.currentUsers > 0) {
+                        chat.find(".curr-users span").text(chatInfo.currentVisits);
+                        if (chatInfo.currentVisits > 0) {
                             chat.addClass("active");
                         } else {
                             chat.removeClass("active");
