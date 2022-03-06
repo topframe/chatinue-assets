@@ -41,13 +41,13 @@ $(function () {
 function makeDiscoveryChatClient(chatClient) {
     chatClient.printJoinMessage = function (talker, restored) {
         chatClient.removeConvoMessages();
-        drawLookingBox();
+        drawLookingFriendsBox();
     };
 
     chatClient.printUserJoinedMessage = function (payload, restored) {
         chatClient.removeConvoMessages();
         let talker = deserialize(payload.talker);
-        let userJoinedMsg = replaceMessageArguments(chatClientMessages.userJoined, "name", talker.userName);
+        let userJoinedMsg = replaceMessageArguments(chatClientMessages.chatStarted, "name", talker.userName);
         chatClient.printEventMessage(userJoinedMsg, restored);
         if (talker.aboutMe) {
             let title = replaceMessageArguments(chatClientMessages.aboutMeTitle, "name", talker.userName);
@@ -59,6 +59,7 @@ function makeDiscoveryChatClient(chatClient) {
             }
             chatClient.printCustomMessage(selfIntro);
         }
+        chatClient.printUserEvent(payload, "user-joined", restored);
         $(".message-box button.send").prop("disabled", false).removeClass("pause");
         chatClient.readyToType();
         setTimeout(function () {
@@ -74,12 +75,12 @@ function makeDiscoveryChatClient(chatClient) {
         stopLooking();
     };
 
-    chatClient.serviceNotAvailable = function () {
+    chatClient.serviceUnavailable = function () {
         chatClient.closeSocket();
         chatClient.clearTalkers();
         chatClient.removeConvoMessages();
         openNoticePopup(chatClientMessages.systemError,
-            chatClientMessages.serviceNotAvailable,
+            chatClientMessages.serviceUnavailable,
             function () {
                 chatClient.gotoHome();
             });
@@ -113,18 +114,18 @@ function startLooking() {
                         }
                     }
                 } else {
-                    chatClient.serviceNotAvailable();
+                    chatClient.serviceUnavailable();
                 }
             },
             error: function () {
-                chatClient.serviceNotAvailable();
+                chatClient.serviceUnavailable();
             }
         });
     }, 1000);
     hideSidebar();
     chatClient.clearTalkers();
     chatClient.removeConvoMessages();
-    drawLookingBox(true);
+    drawLookingFriendsBox(true);
 }
 
 function stopLooking(convoClear) {
@@ -137,18 +138,19 @@ function stopLooking(convoClear) {
     if (convoClear) {
         chatClient.removeConvoMessages();
     }
-    drawSearchBox();
+    drawFiendAnotherBox();
 }
 
-function drawSearchBox() {
+function drawFiendAnotherBox() {
     let html = "<div class='text-center'>" +
         "<i class='iconfont fi-shuffle banner'></i>" +
-        "<button type='button' class='success button next'>" + chatClientMessages.searchAnother + "</button>" +
+        "<button type='button' class='success button next'>" +
+        chatClientMessages.findAnother + "</button>" +
         "</div>";
     chatClient.printCustomMessage(html);
 }
 
-function drawLookingBox(intermission) {
+function drawLookingFriendsBox(intermission) {
     let banner;
     let title;
     if (intermission) {
@@ -156,11 +158,12 @@ function drawLookingBox(intermission) {
         title = "<h3 class='wait'>" + chatClientMessages.wait + "</h3>";
     } else {
         banner = "<i class='iconfont fi-shuffle banner active'></i>";
-        title = "<h3>" + chatClientMessages.looking + "</h3>";
+        title = "<h3>" + chatClientMessages.lookingFriends + "</h3>";
     }
     let html = "<div class='text-center'>" + banner + title +
         "<div class='progress-bar'><div class='cylon_eye'></div></div>" +
-        "<button type='button' class='success button cancel'>" + chatClientMessages.cancel + "</button>" +
+        "<button type='button' class='success button cancel'>" +
+        chatClientMessages.cancel + "</button>" +
         "</div>";
     chatClient.printCustomMessage(html);
     if (intermission) {

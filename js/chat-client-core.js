@@ -574,10 +574,10 @@ function ChatClientCore(chatClientSettings) {
         }
     };
 
-    this.serviceNotAvailable = function () {
+    this.serviceUnavailable = function () {
         openNoticePopup(
             chatClientMessages.systemError,
-            chatClientMessages.serviceNotAvailable,
+            chatClientMessages.serviceUnavailable,
             function () {
                 chatClient.gotoHome();
             });
