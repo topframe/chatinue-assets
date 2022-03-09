@@ -4,7 +4,7 @@
     box-sizing: border-box;
 }
 body {
-    background: #495A61;
+    background: #3A484E;
 }
 .grid-y.grid-frame {
     /*noinspection CssUnresolvedCustomProperty*/
@@ -33,7 +33,7 @@ input#for-automata-clear {
 }
 .header {
     position: relative;
-    background-color: #495A61;
+    background-color: #3A484E;
     color: #fff;
     padding: 0 10px;
 }
@@ -57,7 +57,7 @@ input#for-automata-clear {
     line-height: 30px;
     height: 30px;
     border: none;
-    background-color: #2a414d;
+    background-color: #51636b;
 }
 .header .button .iconfont {
     font-size: 24px;
@@ -87,8 +87,8 @@ input#for-automata-clear {
     min-width: 2em;
     font-size: 1em;
     font-weight: bold;
-    background-color: #2a414d;
-    border-radius: 30px;
+    background-color: #51636b;
+    border-radius: 6px;
     display: none;
 }
 .header .button.sidebar-toggler:hover #totalPeople {

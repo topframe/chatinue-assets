@@ -59,7 +59,6 @@ function makeDiscoveryChatClient(chatClient) {
             }
             chatClient.printCustomMessage(selfIntro);
         }
-        chatClient.printUserEvent(payload, "user-joined", restored);
         $(".message-box button.send").prop("disabled", false).removeClass("pause");
         chatClient.readyToType();
         setTimeout(function () {
