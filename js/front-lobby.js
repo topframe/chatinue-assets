@@ -32,32 +32,6 @@ $(function () {
             location.href = "/chats/" + recentlyCreatedChatId;
         }
     });
-    $(".private-chat-create").on("click", function () {
-        if (!checkSignedIn()) {
-            return false;
-        }
-        $("#lobby-private-chat-create").foundation('open');
-        $("#form-private-private-create").each(function () {
-            this.reset();
-        });
-        $("#form-private-chat-create input[name=chat_nm]").focus();
-    });
-    $("#form-private-chat-create").submit(function () {
-        doCreatePrivateChat();
-        return false;
-    });
-    $("button.go-created-private-chat").on("click", function () {
-        if (recentlyCreatedChatId) {
-            if (chatClient) {
-                chatClient.closeSocket();
-            }
-            location.href = "/private/" + recentlyCreatedChatId;
-        }
-    });
-    $("#lobby-private-chat-create-complete").on("click", ".copy-to-clipboard", function () {
-        copyToClipboard("#lobby-private-chat-create-complete .private-chat-url");
-        $(this).data("old-text", $(this).text()).text(modalMessages.copied).addClass("secondary");
-    });
     $("a.start[href]").on("click", function (event) {
         event.preventDefault();
         if (chatClient) {
@@ -110,10 +84,16 @@ $(function () {
 function doCreatePublicChat() {
     $("#form-public-chat-create .form-error").hide();
     let chatName = $("#form-public-chat-create input[name=chat_nm]").val().trim();
+    let description = $("#form-public-chat-create input[name=description]").val().trim();
     let langCode = $("#form-public-chat-create select[name=lang_cd]").val().trim();
-    if (!chatName) {
+    if (!chatName || chatName.length < 2) {
         $("#form-public-chat-create .form-error.chat-name-required").show();
         $("#form-public-chat-create input[name=chat_nm]").focus();
+        return;
+    }
+    if (!description || description.length < 2) {
+        $("#form-public-chat-create .form-error.chat-description-required").show();
+        $("#form-public-chat-create input[name=description]").focus();
         return;
     }
     $.ajax({
@@ -122,6 +102,7 @@ function doCreatePublicChat() {
         dataType: 'json',
         data: {
             chat_nm: chatName,
+            description: description,
             lang_cd: langCode
         },
         success: function (result) {
@@ -138,55 +119,10 @@ function doCreatePublicChat() {
                         return;
                     }
                     $("#form-public-chat-create input[name=chat_nm]").val('');
+                    $("#form-public-chat-create input[name=description]").val('');
                     recentlyCreatedChatId = result;
                     $("#lobby-public-chat-create").foundation('close');
                     $("#lobby-public-chat-create-complete").foundation('open');
-            }
-        },
-        error: function (request, status, error) {
-            alert("An error has occurred making the request: " + error);
-        }
-    });
-}
-
-function doCreatePrivateChat() {
-    $("#form-private-chat-create .form-error").hide();
-    let chatName = $("#form-private-chat-create input[name=chat_nm]").val().trim();
-    if (!chatName) {
-        $("#form-private-chat-create .form-error.chat-name-required").show();
-        $("#form-private-chat-create input[name=chat_nm]").focus();
-        return;
-    }
-    $.ajax({
-        url: '/private',
-        type: 'post',
-        dataType: 'json',
-        data: {
-            chat_nm: chatName
-        },
-        success: function (result) {
-            recentlyCreatedChatId = null;
-            switch (result) {
-                case "-1":
-                    alert("reCAPTCHA verification failed");
-                    location.reload();
-                    break;
-                default:
-                    if (!result) {
-                        alert("Unexpected error occurred.");
-                        location.reload();
-                        return;
-                    }
-                    recentlyCreatedChatId = result;
-                    let url = "https://chatinue.com/private/" + result;
-                    $("#form-private-chat-create input[name=chat_nm]").val("");
-                    $("#lobby-private-chat-create").foundation('close');
-                    $("#lobby-private-chat-create-complete").foundation('open');
-                    let oldText = $("#lobby-private-chat-create-complete .copy-to-clipboard").data("old-text");
-                    if (oldText) {
-                        $("#lobby-private-chat-create-complete .copy-to-clipboard").text(oldText).removeClass("alert");
-                    }
-                    $("#lobby-private-chat-create-complete .private-chat-url").text(url);
             }
         },
         error: function (request, status, error) {
