@@ -271,7 +271,7 @@ function drawUsersByCountry(usersByCountry, timeout) {
             if (count++ < 5) {
                 let width = Math.floor(users / total * 1000) / 10;
                 $("<div class='item'/>").css("width", width + "%").attr("title", width + "%").text(users).appendTo(series);
-                $("<span class='item'><em></em><span>" + countryNames[key] + "</span></span>").appendTo(legends);
+                $("<span class='item'><em></em><span>" + (countryNames[key] || "?") + "</span></span>").appendTo(legends);
             } else {
                 etcUsers += users;
                 etcCountries.push(countryNames[key] + ": " + users);

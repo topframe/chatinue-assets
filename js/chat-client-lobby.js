@@ -102,12 +102,6 @@ function makeLobbyChatClient(chatClient) {
     };
 
     chatClient.printUserJoinedMessage = function (payload, restored) {
-        // if (restored) {
-        //     return;
-        // }
-        // let talker = deserialize(payload.talker);
-        // let userJoinedMsg = replaceMessageArguments(chatClientMessages.userJoined, "name", talker.userName);
-        // chatClient.printEventMessage(userJoinedMsg);
     };
 
     chatClient.printUserLeftMessage = function (payload, restored) {

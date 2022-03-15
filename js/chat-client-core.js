@@ -80,7 +80,7 @@ function ChatClientCore(chatClientSettings) {
     };
 
     this.openSocket = function (token, params) {
-        if (!token || token.length > 127) {
+        if (!token) {
             chatClient.gotoHome();
             return;
         }
