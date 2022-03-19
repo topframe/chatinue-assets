@@ -100,6 +100,7 @@ function ChatClientCore(chatClientSettings) {
         socket.onmessage = function (event) {
             if (typeof event.data === "string") {
                 let chatMessage = deserialize(event.data);
+                console.log(chatMessage);
                 chatClient.handleMessage(chatMessage);
             }
         };
@@ -251,7 +252,7 @@ function ChatClientCore(chatClientSettings) {
     this.handelNotice = function (payload) {
         console.log(payload);
         switch (payload.type) {
-            case "messageDeleted": {
+            case "chatMsgDeleted": {
                 let msgId = payload.text;
                 let balloon = $("#convo #msg-" + msgId);
                 let icon = $("<i class='iconfont fi-trash not-supported'></i>")
