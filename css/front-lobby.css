@@ -133,8 +133,9 @@
     position: relative;
     border-radius: 10px;
     border: 1px solid #99ddfc;
-    padding: .5em .7em 1.5em;
+    padding: .5em .7em;
     color: #888;
+    min-height: 3.7em;
 }
 .chats .chat.cell {
     margin-bottom: 0;
@@ -144,16 +145,21 @@
 }
 .chats .chat h5 {
     color: #1691cf;
-    margin-right: 1em;
-    margin-bottom: .3em;
+    margin-right: 4em;
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.chats .chat .chat-description {
+    line-height: 1.2;
+    margin-right: 2.5em;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
 .chats .chat .chat-info {
     position: absolute;
-    left: 0;
-    bottom: 0;
-    padding: .35em .55em;
+    top: 0;
+    right: 0;
+    padding: .55em .75em;
     line-height: 1;
 }
 .chats .chat .curr-users {
@@ -174,18 +180,11 @@
     0% { color: #0280be; }
     100% { color: #92d3f3; }
 }
-.chats .chat .lang {
-    padding-left: 1em;
-    font-size: .9em;
-}
 .chats .chat .new {
-    position: absolute;
-    right: .1em;
-    top: 0;
-    padding: .1em;
+    padding-right: .3em;
     color: #ff8f18;
     line-height: 1;
-    font-size: 1.5em;
+    font-size: 1.1em;
 }
 .chat .button.start {
     position: absolute;

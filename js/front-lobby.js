@@ -179,6 +179,7 @@ function refreshChats(chatLang, recursable) {
                     chat.data("chat-id", chatInfo.chatId);
                     chat.find("a").attr("href", "/chats/" + chatInfo.chatId);
                     chat.find("h5").text(chatInfo.chatName);
+                    chat.find(".chat-description").text(chatInfo.description);
                     chat.find(".curr-users span").text(chatInfo.currentVisits);
                     if (chatInfo.currentVisits > 0) {
                         chat.addClass("active");
