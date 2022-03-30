@@ -5,8 +5,8 @@
  "start_url": "/",
  "scope": "/",
  "display": "standalone",
- "theme_color": "#9ad4f0",
- "background_color": "#39484E",
+ "theme_color": "#3A484E",
+ "background_color": "#FFFFFF",
  "icons": [
   {
    "src": "https://chatinue.com/assets/favicons/android-icon-36x36.png",
