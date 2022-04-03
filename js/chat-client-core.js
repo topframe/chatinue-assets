@@ -260,6 +260,10 @@ function ChatClientCore(chatClientSettings) {
                 balloon.empty().append(icon);
                 break;
             }
+            case "chatDeleted": {
+                chatClient.chatDeleted();
+                break;
+            }
         }
     };
 
@@ -582,5 +586,11 @@ function ChatClientCore(chatClientSettings) {
             function () {
                 chatClient.gotoHome();
             });
+    };
+
+    this.chatDeleted = function () {
+        if (chatClientSettings.chatId > 0) {
+            $("#public-chat-deleted").foundation('open');
+        }
     };
 }
