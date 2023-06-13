@@ -192,7 +192,7 @@ function ChatClientCore(chatClientSettings) {
         }
     };
 
-    this.leaveChat = function (force) {
+    this.leaveChat = function () {
         chatClient.closeSocket();
         chatClient.gotoHome();
     };

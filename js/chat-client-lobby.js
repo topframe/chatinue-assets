@@ -121,16 +121,12 @@ function makeLobbyChatClient(chatClient) {
         }, timeout || 3500);
     };
 
-    chatClient.leaveChat = function (force) {
+    chatClient.leaveChat = function () {
         chatClient.closeSocket();
-        if (force) {
-            location.href = "/sign-out";
-        } else {
-            chatClient.gotoHome();
-        }
+        location.href = "/sign-out";
     };
 
     chatClient.gotoHome = function () {
-        chatClient.leaveChat(true);
+        chatClient.leaveChat();
     };
 }
